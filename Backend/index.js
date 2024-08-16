@@ -57,7 +57,7 @@ app.use('/Booking', Booking_Route);
 //  app.use('/ServiceHistory', ServiceHistory_Route);
 //  app.use('/Store', Store_Route);
 
-//  app.use('/Vacancy', Vacancy_Route);
+ app.use('/Vacancy', Vacancy_Route);
 //  app.use('/Vehicle', Vehicle_Route);
 
 
