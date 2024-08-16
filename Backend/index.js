@@ -14,7 +14,7 @@ import { PORT, mongoDBURL } from './config.js';
 import Booking_Route from './Routes/Booking_Route.js';
 // import EmployeeSalary_Route from './Routes/EmployeeSalary_Route.js';
 //  import Feedback_Route from './Routes/Feedback_Route.js';
-//  import Inquire_Route from './Routes/inquire_Route.js';
+ import Inquire_Route from './Routes/inquire_Route.js';
 //  import Promotion_Route from './Routes/Promotion_Route.js';
 //  import Repair_Route from './Routes/Repair_Route.js';
 
