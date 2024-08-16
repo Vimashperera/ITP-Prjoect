@@ -50,7 +50,7 @@ app.use(cors());
 app.use('/Booking', Booking_Route);
 //  app.use('/EmployeeSalary', EmployeeSalary_Route);
 //  app.use('/Feedback', Feedback_Route);
-//  app.use('/inquire', Inquire_Route);
+app.use('/inquire', Inquire_Route);
 //  app.use('/Promotion', Promotion_Route);
 //  app.use('/Repair', Repair_Route);
 
