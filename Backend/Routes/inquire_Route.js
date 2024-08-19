@@ -128,8 +128,3 @@ router.delete('/:id', async(request, response) => {
 
 // Exporting the Express router
 export default router;
-
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
