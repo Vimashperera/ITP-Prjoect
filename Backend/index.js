@@ -18,11 +18,11 @@ import Inquire_Route from './Routes/inquire_Route.js';
 //  import Promotion_Route from './Routes/Promotion_Route.js';
 //  import Repair_Route from './Routes/Repair_Route.js';
 
-//  import ServiceHistory_Route from './Routes/ServiceHistory_Route.js';
+import ServiceHistory_Route from './Routes/ServiceHistory_Route.js';
 //  import Store_Route from './Routes/Store_Route.js';
 
  import Vacancy_Route  from './Routes/Vacancy_Route.js';
-// import Vehicle_Route from './Routes/Vehicle_Route.js';
+import Vehicle_Route from './Routes/Vehicle_Route.js';
 
 
 
