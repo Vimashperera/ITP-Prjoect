@@ -13,7 +13,7 @@ import Employee_Route from './Routes/Employee_Route.js';
 // import Applicant_Route from './Routes/Applicant_Route.js';
 import Booking_Route from './Routes/Booking_Route.js';
 //import EmployeeSalary_Route from './Routes/EmployeeSalary_Route.js';
-//  import Feedback_Route from './Routes/Feedback_Route.js';
+  import Feedback_Route from './Routes/Feedback_Route.js';
 import Inquire_Route from './Routes/inquire_Route.js';
 //  import Promotion_Route from './Routes/Promotion_Route.js';
 import Repair_Route from './Routes/Repair_Route.js';
@@ -49,7 +49,7 @@ app.use(cors());
 
 app.use('/Booking', Booking_Route);
 //app.use('/EmployeeSalary', EmployeeSalary_Route);
-//  app.use('/Feedback', Feedback_Route);
+  app.use('/Feedback', Feedback_Route);
  app.use('/inquire', Inquire_Route);
 //  app.use('/Promotion', Promotion_Route);
  app.use('/Repair', Repair_Route);
