@@ -10,7 +10,6 @@ import { PORT, mongoDBURL } from './config.js';
 
 
 import Employee_Route from './Routes/Employee_Route.js';
-// import Applicant_Route from './Routes/Applicant_Route.js';
 import Booking_Route from './Routes/Booking_Route.js';
 import EmployeeSalary_Route from './Routes/EmployeeSalary_Route.js';
   import Feedback_Route from './Routes/Feedback_Route.js';
@@ -45,7 +44,7 @@ app.use(cors());
 
   app.use('/Employee', Employee_Route);
 
-//  app.use('/Applicant', Applicant_Route);
+
 
 app.use('/Booking', Booking_Route);
 app.use('/EmployeeSalary', EmployeeSalary_Route);
@@ -54,11 +53,11 @@ app.use('/EmployeeSalary', EmployeeSalary_Route);
 app.use('/Promotion', Promotion_Route);
  app.use('/Repair', Repair_Route);
 
-//  app.use('/ServiceHistory', ServiceHistory_Route);
-//  app.use('/Store', Store_Route);
+ app.use('/ServiceHistory', ServiceHistory_Route);
+
 
  app.use('/Vacancy', Vacancy_Route);
-//  app.use('/Vehicle', Vehicle_Route);
+ app.use('/Vehicle', Vehicle_Route);
 
 
 // Connecting to the MongoDB database
