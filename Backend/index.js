@@ -18,7 +18,7 @@ import Promotion_Route from './Routes/Promotion_Route.js';
 import Repair_Route from './Routes/Repair_Route.js';
 
 import ServiceHistory_Route from './Routes/ServiceHistory_Route.js';
-//  import Store_Route from './Routes/Store_Route.js';
+  import Store_Route from './Routes/Store_Route.js';
 
  import Vacancy_Route  from './Routes/Vacancy_Route.js';
 import Vehicle_Route from './Routes/Vehicle_Route.js';
@@ -54,7 +54,7 @@ app.use('/Promotion', Promotion_Route);
  app.use('/Repair', Repair_Route);
 
  app.use('/ServiceHistory', ServiceHistory_Route);
-
+ app.use('/Store', Store_Route);
 
  app.use('/Vacancy', Vacancy_Route);
  app.use('/Vehicle', Vehicle_Route);
