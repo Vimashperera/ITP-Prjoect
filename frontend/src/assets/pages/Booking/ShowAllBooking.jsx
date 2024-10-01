@@ -184,4 +184,170 @@ const handleSearch = () => {
         // Save the generated PDF with the formatted date in the filename
         doc.save(`Booking-Report_${dateStr}.pdf`);
     };
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you sure you want to delete this booking?")) {
+            try {
+                await axios.delete(`http://localhost:8077/Booking/${id}`);
+                setBookings(bookings.filter((booking) => booking._id !== id));
+                setFilteredBookings(filteredBookings.filter((booking) => booking._id !== id));
+                alert("Booking deleted successfully!");
+            } catch (error) {
+                console.error("There was an error deleting the booking!", error);
+                alert("Failed to delete booking. Please try again.");
+            }
+        }
+    };
+
+    const handleStatusChange = async (id, newStatus) => {
+        try {
+            await axios.put(`http://localhost:8077/Booking/${id}/status`, { status: newStatus });
+            setBookings(bookings.map((booking) =>
+                booking._id === id ? { ...booking, status: newStatus } : booking
+            ));
+            setFilteredBookings(filteredBookings.map((booking) =>
+                booking._id === id ? { ...booking, status: newStatus } : booking
+            ));
+        } catch (error) {
+            console.error("Error updating status", error);
+        }
+    };
+
+    return (
+        <div className={`flex h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+            {/* Sidebar */}
+            {sidebarOpen && (
+                <aside className="w-64 bg-gray-800 text-white flex flex-col">
+                    <div className="flex items-center justify-center h-16 bg-gray-800">
+                        <img src={logo} alt="logo" style={{ width: '60px', height: '60px' }} />
+                    </div>
+                    <nav className="flex-1">
+                    </nav>
+                    <div className="p-3">
+                    <button className="w-full flex items-center p-3 bg-gray-800 rounded hover:bg-gray-700">
+                <i className="bx bx-cog text-xl"></i>
+                <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
+                            <Link to="/">Logout</Link>
+                        </li>
+            </button>
+                    </div>
+                </aside>
+            )}
+
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col">
+                {/* Top Navbar */}
+                <header className="flex items-center justify-between bg-white h-16 px-4 shadow">
+                    <div className="flex items-center">
+                        <i className="bx bx-menu text-xl cursor-pointer" onClick={toggleSidebar}></i>
+                        <input
+                            type="search"
+                            placeholder="Search..."
+                            className="ml-4 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <button 
+                            className="mt-1 ml-3 inline-block px-8 py-2.5 text-white bg-gray-800 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md"
+                            onClick={toggleDarkMode}
+                        >
+                            {darkMode ? 'Light Mode' : 'Dark Mode'}
+                        </button>
+                        <button 
+                            className="mt-1 ml-3 inline-block px-8 py-2.5 text-white bg-red-500 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md"
+                            onClick={() => generateBookingPDF(filteredBookings)}
+                        >
+                            Generate Report
+                        </button>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                        <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+                    </div>
+                </header>
+
+                {/* Table Section */}
+                
+                <section className={`p-6 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
+
+                    {loading ? (
+                        <Spinner />
+                    ) : error ? (
+                        <p className="text-red-500">Error: {error}</p>
+                    ) : (
+                        <table className={`min-w-full ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+                            <thead>
+                                <tr className="bg-gray-800 text-white">
+                                    <th className="py-2 px-4">ID</th>
+                                    <th className="py-2 px-4">Date</th>
+                                    <th className="py-2 px-4">Customer</th>
+                                    <th className="py-2 px-4">Vehicle Type</th>
+                                    <th className="py-2 px-4">Vehicle Number</th>
+                                    <th className="py-2 px-4">Contact Number</th>
+                                    <th className="py-2 px-4">Email</th>
+                                    <th className="py-2 px-4">Package</th>
+                                    <th className="py-2 px-4">Services</th>
+                                    <th className="py-2 px-4">Status</th>
+                                    <th className="py-2 px-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+    {filteredBookings.length > 0 ? (
+        filteredBookings.map((booking, index) => (
+            <tr
+                key={booking._id}
+                className={index % 2 === 0 ? (darkMode ? 'bg-gray-700' : 'bg-gray-100') : (darkMode ? 'bg-gray-800' : 'bg-white')}
+            >
+                <td className="py-2 px-4">{booking.Booking_Id}</td>
+                <td className="py-2 px-4">{new Date(booking.Booking_Date).toLocaleDateString()}</td>
+                <td className="py-2 px-4">{booking.Customer_Name}</td>
+                <td className="py-2 px-4">{booking.Vehicle_Type}</td>
+                <td className="py-2 px-4">{booking.Vehicle_Number}</td>
+                <td className="py-2 px-4">{booking.Contact_Number}</td>
+                <td className="py-2 px-4">{booking.Email}</td>
+                <td className="py-2 px-4">{booking.selectedPackage}</td>
+                <td className="py-2 px-4">{booking.selectedServices.join(', ')}</td>
+                <td className="py-2 px-4">
+                    <select
+                        value={booking.status}
+                        onChange={(e) => handleStatusChange(booking._id, e.target.value)}
+                        className={darkMode ? 'bg-gray-600 text-white' : 'bg-white text-black'}
+                    >
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </td>
+                <td className="py-2 px-4">
+                    <div style={styles.actionIcons}>
+                        <Link to={`/Booking/edit/${booking._id}`}>
+                            <AiOutlineEdit className="text-blue-500" />
+                        </Link>
+                        <MdOutlineDelete
+                            className="text-red-500 cursor-pointer"
+                            onClick={() => handleDelete(booking._id)}
+                        />
+                        <Link to={`/Booking/get/${booking._id}`}>
+                            <BsInfoCircle className="text-green-500" />
+                        </Link>
+                    </div>
+                </td>
+            </tr>
+        ))
+    ) : (
+        <tr>
+            <td colSpan="10" className="py-4 px-4 text-center text-red-500">
+                No bookings found.
+            </td>
+        </tr>
+    )}
+</tbody>
+
+                        </table>
+                    )}
+                </section>
+            </div>
+        </div>
+    );
+};
+
+export default ShowBooking;
 
