@@ -113,4 +113,188 @@ const CreatePromotion = () => {
     }
   };
 
-}
+  const styles = {
+    container: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: "100vh",
+      padding: "20px",
+      fontFamily: '"Noto Sans", sans-serif',
+    },
+    backButton: {
+      marginBottom: "50%",
+      marginLeft: "-80%",
+      position: "absolute",
+    },
+  
+    form: {
+      borderRadius: "30px",
+      backgroundColor: "#1a1a1a",
+      color: "#fff",
+      maxWidth: "450px",
+      padding: "20px",
+      height: "auto",
+   
+    },
+    title: {
+      color: "#6c1c1d",
+      fontSize: "30px",
+      fontWeight: "600",
+      paddingLeft: "30px",
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+    },
+    input: {
+      backgroundColor: "#333",
+      color: "#fff",
+      border: "1px solid rgba(105, 105, 105, 0.397)",
+      borderRadius: "10px",
+      fontSize: "1rem",
+      padding: "15px 8px",
+      outline: "0",
+      width: "100%",
+      marginTop: "20px",
+      marginBottom: "20px",
+    },
+    flex: {
+      display: "flex",
+      gap: "8px",
+      marginTop: "15px",
+    },
+    submitButton: {
+      border: "none",
+      backgroundColor: "#6c1c1d",
+      marginTop: "10px",
+      outline: "none",
+      padding: "10px",
+      borderRadius: "10px",
+      color: "#fff",
+      fontSize: "16px",
+      width: "100%",
+      cursor: "pointer",
+    },
+    submitButtonHover: {
+      backgroundColor: "#661003f5",
+    },
+    includeButton: {
+      padding: "10px",
+      margin: "5px",
+      borderRadius: "10px",
+      cursor: "pointer",
+    },
+  };
+
+  return (
+    <div className=""><Navbar/>
+    <div style={styles.container}>
+      <div style={styles.backButton}>
+        <BackButton destination="/promotion" />
+      </div>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <h2 style={styles.title}>Create Promotion</h2>
+        <input
+          type="text"
+          placeholder="Title"
+          name="title"
+          value={promotion.title}
+          onChange={handleChange}
+          required
+          style={styles.input}
+        />
+        <input
+          type="text"
+          placeholder="Description"
+          name="description"
+          value={promotion.description}
+          onChange={handleChange}
+          required
+          style={styles.input}
+        />
+
+        {/* Includes Service Selection */}
+        <div style={styles.flex}>
+          <label>Includes:</label>
+          <div>
+            {services.map(service => (
+              <button
+                key={service._id}
+                type="button"
+                style={{
+                  ...styles.includeButton,
+                  backgroundColor: selectedServices.some(s => s.name === service.Servicename) ? 'red' : 'gray',
+                  color: selectedServices.some(s => s.name === service.Servicename) ? 'white' : 'black',
+                }}
+                onClick={() => handleServiceSelect(service.Servicename, service.Price)}
+              >
+                {service.Servicename} (${service.Price})
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div style={styles.flex}>
+          <input
+            type="date"
+            name="startDate"
+            value={promotion.startDate}
+            onChange={handleChange}
+            required
+            style={styles.input}
+          />
+          <input
+            type="date"
+            name="endDate"
+            value={promotion.endDate}
+            onChange={handleChange}
+            required
+            style={styles.input}
+          />
+        </div>
+
+        <div style={styles.flex}>
+        <label>Percentage:</label>
+        <input
+          type="number"
+          placeholder="Percentage Discount"
+          value={percentage}
+          onChange={handlePercentageChange}
+          style={styles.input}
+        />
+
+       
+        <input
+          type="number"
+          placeholder="Discount"
+          name="discount"
+          value={promotion.discount}
+          onChange={handleChange}
+          required
+          style={styles.input}
+          readOnly 
+        />
+        </div>
+        <button
+          type="submit"
+          style={styles.submitButton}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor =
+              styles.submitButtonHover.backgroundColor)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor =
+              styles.submitButton.backgroundColor)
+          }
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+    <Footer/>
+    </div>
+  );
+};
+
+export default CreatePromotion;
+
