@@ -20,23 +20,20 @@ const employeeSalarySchema = mongoose.Schema(
     },
     totalOThours: {
         type: Number,
-        //required: true,
+        required: true,
     },
     totalOTpay: {
         type: Number,
-        //required: true,
+        required: true,
     },
-    // totalWorkedhours: {
-    //     type: Number,
-    //     //required: true,
-    // },
+    
     BasicSalary: {
         type: Number,
         required: true,
     },
     TotalSalary: {
         type: Number,
-        //required: true,
+        required: true,
     },
 
     }
