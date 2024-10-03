@@ -8,7 +8,7 @@ import ReadOneBooking from "./assets/pages/Booking/ReadoneBooking";
 
 const App = () => {
   return(
-    <div>Monawada load karala balanne </div>
+    <div> ITP Project   </div>
   )
 }
 
