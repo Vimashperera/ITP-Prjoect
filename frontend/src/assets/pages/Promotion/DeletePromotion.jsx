@@ -97,4 +97,3 @@ const DeletePromotion = () => {
 };
 
 export default DeletePromotion;
-
