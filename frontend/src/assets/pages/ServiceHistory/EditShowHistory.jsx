@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { useParams, useNavigate } from "react-router-dom";
 
 import img1 from "../../images/bg02.jpg";
 import BackButton from "../../components/BackButton";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../footer/Footer";
 
-function CreateServiceHistory() {
+function EditShowHistory() {
+  const { id } = useParams(); // Get the id from route params
   const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [services, setServices] = useState([]);
   const [promotion, setPackages] = useState([]);
-  const [bookings, setBookings] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [service, setService] = useState({
     cusID: "",
+    Customer_Name: "",
+    Customer_Email: "",
     Allocated_Employee: "",
     Vehicle_Number: "",
     Service_History: "",
@@ -24,6 +25,7 @@ function CreateServiceHistory() {
     Milage: "",
     Package: "",
     selectedServices: [],
+    Booking_Id: "",
     nextService: "",
   });
   const [loading, setLoading] = useState(false);
@@ -37,21 +39,21 @@ function CreateServiceHistory() {
           promotionsResponse,
           employeesResponse,
           servicesResponse,
-          bookingsResponse,
           vehicleResponse,
+          serviceHistoryResponse,
         ] = await Promise.all([
           axios.get("http://localhost:8077/Promotion"),
           axios.get("http://localhost:8077/Employee"),
           axios.get("http://localhost:8077/service"),
-          axios.get("http://localhost:8077/Booking"),
           axios.get("http://localhost:8077/Vehicle"),
+          axios.get(`http://localhost:8077/ServiceHistory/${id}`), // Fetch specific service history by ID
         ]);
 
         setPackages(promotionsResponse.data);
         setEmployees(employeesResponse.data.data);
         setServices(servicesResponse.data.data);
-        setBookings(bookingsResponse.data);
         setVehicles(vehicleResponse.data.data);
+        setService(serviceHistoryResponse.data); // Pre-fill form with fetched data
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to fetch data.");
@@ -61,39 +63,7 @@ function CreateServiceHistory() {
     };
 
     fetchData();
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-  
-    if (type === "checkbox") {
-      setService((prev) => ({
-        ...prev,
-        selectedServices: checked
-          ? [...prev.selectedServices, value]
-          : prev.selectedServices.filter((item) => item !== value),
-      }));
-    } else {
-      setService((prev) => ({ ...prev, [name]: value }));
-  
-      if (name === "Milage") {
-        const milage = parseInt(value, 10);
-  
-        // Validate if the input is not a valid integer or is less than or equal to 0
-        if (isNaN(milage) || milage <= 0) {
-          Swal.fire({
-            position: "center",
-            icon: "error",
-            title: "Please enter a valid positive integer for mileage.",
-            showConfirmButton: true,
-          });
-        } else {
-          // Set next service to 5000 miles after the current mileage
-          setService((prev) => ({ ...prev, nextService: milage + 5000 }));
-        }
-      }
-    }
-  };
+  }, [id]);
 
   const handleVehicleSelect = (e) => {
     const selectedVehicleId = e.target.value;
@@ -116,39 +86,49 @@ function CreateServiceHistory() {
     }
   };
 
-  const handlePackageChange = (e) => {
-    const selectedPackage = e.target.value;
-    setService((prev) => ({ ...prev, Package: selectedPackage }));
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setService((prev) => ({
+        ...prev,
+        selectedServices: checked
+          ? [...prev.selectedServices, value]
+          : prev.selectedServices.filter((item) => item !== value),
+      }));
+    } else {
+      setService((prev) => ({ ...prev, [name]: value }));
+
+      if (name === "Milage") {
+        const milage = parseInt(value, 10) || 0;
+        setService((prev) => ({ ...prev, nextService: milage + 5000 }));
+      }
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Check if at least one include is selected
-    if (service.selectedServices.length === 0 && !service.Package) {
-        Swal.fire({
-            position: "center",
-            icon: "warning",
-            title: "Please select at least one service or a package.",
-            showConfirmButton: true,
-        });
-        setLoading(false); // Stop the loading indicator
-        return; // Prevent submission
+    const nameRegex = /^[A-Za-z\s]+$/;
+
+    if (!nameRegex.test(service.Customer_Name)) {
+      setLoading(false);
+      setError("Customer name cannot contain numbers or special characters.");
+      return;
     }
 
     axios
-      .post("http://localhost:8077/ServiceHistory", service)
+      .put(`http://localhost:8077/ServiceHistory/${id}`, service) // PUT request to update service history
       .then((response) => {
-        console.log("Service history created:", response.data);
-        navigate("/ServiceHistory");
+        console.log("Service history updated:", response.data);
+        navigate("/ServiceHistory"); // Redirect to the service history page after successful update
       })
       .catch((error) => {
-        console.error("Error creating service history:", error);
-        setError("Error creating service history.");
+        console.error("Error updating service history:", error);
+        setError("Error updating service history.");
         setLoading(false);
       });
-};
+  };
 
   return (
     <div>
@@ -159,28 +139,28 @@ function CreateServiceHistory() {
         </div>
         <img src={img1} style={styles.image} alt="background" />
         <form style={styles.form} onSubmit={handleSubmit}>
-          <h2 style={styles.title}>Add Service History</h2>
-
-          <label>
-            <label>
-              <select
-                name="Vehicle_Number"
-                value={service.Vehicle_Number}
-                onChange={handleVehicleSelect}
-                required
-                style={styles.input}
-              >
-                <option value="">Select Vehicle Number</option>
-                {vehicles.map((vehicle) => (
-                  <option key={vehicle._id} value={vehicle.Register_Number}>
-                    {vehicle.Register_Number}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </label>
+          <h2 style={styles.title}>Edit Service History</h2>
 
           <div style={styles.flex}>
+            <label>
+              <label>
+                <select
+                  name="Vehicle_Number"
+                  value={service.Vehicle_Number}
+                  onChange={handleVehicleSelect}
+                  required
+                  style={styles.input}
+                >
+                  <option value="">Select Vehicle Number</option>
+                  {vehicles.map((vehicle) => (
+                    <option key={vehicle._id} value={vehicle.Register_Number}>
+                      {vehicle.Register_Number}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </label>
+
             <label>
               <input
                 type="text"
@@ -190,7 +170,6 @@ function CreateServiceHistory() {
                 onChange={handleChange}
                 required
                 style={styles.input}
-                readOnly
               />
             </label>
 
@@ -212,6 +191,7 @@ function CreateServiceHistory() {
             </label>
           </div>
           <div style={styles.flex}>
+
             <label>
               <input
                 type="text"
@@ -249,11 +229,10 @@ function CreateServiceHistory() {
                 style={styles.input}
               />
             </label>
-
             <select
               name="Package"
               value={service.Package}
-              onChange={handlePackageChange}
+              onChange={handleChange}
               style={styles.input}
             >
               <option value="">Select Package</option>
@@ -263,18 +242,19 @@ function CreateServiceHistory() {
                 </option>
               ))}
             </select>
-
-            <label>
-              <input
-                type="text"
-                name="nextService"
-                placeholder="Next Service"
-                value={service.nextService}
-                readOnly
-                style={styles.input}
-              />
-            </label>
           </div>
+
+          <label>
+            <input
+              type="text"
+              name="nextService"
+              placeholder="Next Service"
+              value={service.nextService}
+              readOnly
+              style={styles.input}
+            />
+          </label>
+
           <div style={{ marginTop: "20px" }}>
             <label style={{ fontSize: "18px", marginBottom: "10px" }}>
               Includes:
@@ -385,4 +365,4 @@ const styles = {
   },
 };
 
-export default CreateServiceHistory;
+export default EditShowHistory;

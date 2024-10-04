@@ -4,16 +4,10 @@ import mongoose from "mongoose";
 const serviceSchema = mongoose.Schema({
     cusID: {
         type: String,
+        required:true,
         
     },
-    Customer_Name: {
-        type: String,
-        required: true,
-    },
-    Customer_Email: {
-        type: String,
-        required: true,
-    },
+
     Allocated_Employee: {
         type: String,
         required: true,
@@ -39,10 +33,6 @@ const serviceSchema = mongoose.Schema({
      selectedServices: {
         type: [String],
         required: true
-    },
-    Booking_Id: {
-        type: String,
-        required: true,
     },
     nextService: {
         type: String, // Changed to Date type for better representation

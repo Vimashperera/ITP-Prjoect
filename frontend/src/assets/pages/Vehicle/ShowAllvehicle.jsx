@@ -11,9 +11,9 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable'; 
 import logo from '../../images/logo.png';
 
-const ShowAllServiceHistory = () => {
-    const [serviceHistories, setServiceHistories] = useState([]);
-    const [filteredHistories, setFilteredHistories] = useState([]);
+const ShowAllVehicles = () => {
+    const [vehicles, setVehicles] = useState([]);
+    const [filteredVehicles, setFilteredVehicles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -21,13 +21,17 @@ const ShowAllServiceHistory = () => {
     const [isCustomerOpen, setIsCustomerOpen] = useState(false);
     const [isEmployeeOpen, setIsEmployeeOpen] = useState(false);
     const [isCompanyOpen, setIsCompanyOpen] = useState(false);
-
     const styles = {
         tableRowEven: {
             backgroundColor: '#f9f9f9',
         },
         tableRowOdd: {
             backgroundColor: '#ffffff',
+        },
+        image: {
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
         },
         actionIcons: {
             display: 'flex',
@@ -45,52 +49,65 @@ const ShowAllServiceHistory = () => {
     };
 
     useEffect(() => {
-        const fetchServiceHistories = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get('http://localhost:8077/ServiceHistory');
-                setServiceHistories(response.data.service);
-                setFilteredHistories(response.data.service);
-            } catch (error) {
-                console.error("There was an error fetching the service histories!", error);
-            } finally {
+        setLoading(true);
+        axios
+            .get('http://localhost:8077/Vehicle') // Replace with your actual API endpoint
+            .then((response) => {
+                setVehicles(response.data.data);
+                setFilteredVehicles(response.data.data); // Initialize filtered data
                 setLoading(false);
-            }
-        };
-
-        fetchServiceHistories();
+            })
+            .catch((error) => {
+                console.error(error);
+                setLoading(false);
+            });
     }, []);
 
     const handleSearch = (event) => {
         const query = event.target.value.toLowerCase();
         setSearchQuery(query);
-        const filtered = serviceHistories.filter((history) =>
-            history.Vehicle_Number.toLowerCase().includes(query) ||
-            history.cusID.toLowerCase().includes(query) 
+
+        const filtered = vehicles.filter((vehicle) =>
+            vehicle.Register_Number.toLowerCase().includes(query) ||
+            vehicle.Make.toLowerCase().includes(query) ||
+            vehicle.Model.toLowerCase().includes(query) ||
+            vehicle.Owner.toLowerCase().includes(query)
         );
-        setFilteredHistories(filtered);
+        setFilteredVehicles(filtered);
     };
+
+    useEffect(() => {
+        handleSearch({ target: { value: searchQuery } });
+    }, [searchQuery]);
 
     const generateReport = () => {
         const doc = new jsPDF();
         const date = new Date().toLocaleDateString(); // Current date for the report
     
-        // Define table columns for service history data
+        // Define table columns for vehicle data
         const tableColumn = [
-            'Customer ID','Vehicle No', 'Employee',  'Service History', 'Service Date', 'Mileage', 'Package', 'Selected Services', 'Next Service'
+            "No", 
+            "Register Number", 
+            "Make", 
+            "Model", 
+            "Year", 
+            "Engine Details", 
+            "Transmission", 
+            "Color", 
+            "Owner"
         ];
     
-        // Map service history data to table rows
-        const tableRows = filteredHistories.map(history => [
-            history.cusID,
-            history.Vehicle_Number,
-            history.Allocated_Employee,
-            history.Service_History,
-            new Date(history.Service_Date).toLocaleDateString(), // Format service date
-            history.Milage,
-            history.Package,
-            history.selectedServices.join(", "), // Join selected services as a comma-separated string
-            history.nextService
+        // Map vehicle data to table rows, with an index for the 'No' column
+        const tableRows = filteredVehicles.map((vehicle, index) => [
+            index + 1,
+            vehicle.Register_Number,
+            vehicle.Make,
+            vehicle.Model,
+            vehicle.Year,
+            vehicle.Engine_Details,
+            vehicle.Transmission_Details,
+            vehicle.Vehicle_Color,
+            vehicle.Owner,
         ]);
     
         // Add report header and company details
@@ -98,7 +115,7 @@ const ShowAllServiceHistory = () => {
         doc.text("Wasana Auto Service", 60, 15); // Company name
     
         doc.setFontSize(20).setTextColor(0, 0, 0);
-        doc.text("Service History Report", 55, 25); // Report title
+        doc.text("Vehicle Report", 70, 25); // Report title
     
         doc.setFontSize(15).setTextColor(100, 100, 100);
         doc.text(`Report Generated Date: ${date}`, 65, 35); // Report date
@@ -109,12 +126,12 @@ const ShowAllServiceHistory = () => {
     
         // Add a separator line
         doc.text(
-            "-----------------------------------------------------------------------------------------------------------------------------------------------------",
+            "--------------------------------------------------------------------------------------------------",
             0,
             50
         );
     
-        // Create and format the service history table
+        // Create and format the vehicle table
         doc.autoTable({
             startY: 55,
             margin: { left: 20, right: 20 }, // Set margins
@@ -129,24 +146,54 @@ const ShowAllServiceHistory = () => {
         });
     
         // Save the PDF with a custom file name including the date
-        doc.save(`Service_History_Report_${date}.pdf`);
+        doc.save(`Vehicle_Report_${date}.pdf`);
     };
     
-    const handleDelete = async (id) => {
-        if (window.confirm("Are you sure you want to delete this service history?")) {
-            try {
-                await axios.delete(`http://localhost:8077/ServiceHistory/${id}`);
-                setServiceHistories(serviceHistories.filter((history) => history._id !== id));
-                setFilteredHistories(filteredHistories.filter((history) => history._id !== id));
-                alert("Service history deleted successfully!");
-            } catch (error) {
-                console.error("There was an error deleting the service history!", error);
-                alert("Failed to delete service history. Please try again.");
+
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios
+                    .delete(`http://localhost:8077/Vehicle/${id}`)
+                    .then((response) => {
+                        if (response.status === 200) {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success",
+                            }).then(() => {
+                                setVehicles(vehicles.filter(vehicle => vehicle._id !== id));
+                                setFilteredVehicles(filteredVehicles.filter(vehicle => vehicle._id !== id));
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Error!",
+                                text: "Failed to delete item.",
+                                icon: "error",
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error deleting item:", error);
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to delete item.",
+                            icon: "error",
+                        });
+                    });
             }
-        }
+        });
     };
 
-   
+
 
     return (
         <div className={`flex h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
@@ -178,13 +225,13 @@ const ShowAllServiceHistory = () => {
                 </li>
                 {isCustomerOpen && (
                     <ul className="ml-8">
-                        
+                       
                         <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
                             <Link to="/ServiceHistory">Service History</Link>
                         </li>
-
+                        
                         <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
-                            <Link to="/vehicles">Vehicl Deatils</Link>
+                            <Link to="/vehicles">Vehicle</Link>
                         </li>
                         
                     </ul>
@@ -231,7 +278,7 @@ const ShowAllServiceHistory = () => {
                             {darkMode ? 'Light Mode' : 'Dark Mode'}
                         </button>
                         <button class="mt-1 ml-3 inline-block px-8 py-2.5 text-white bg-gray-800 text-sm uppercase rounded-full shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md"  >
-                                <Link to="/ServiceHistory/create">Add Service History</Link>
+                                <Link to="/vehicles/create">Add Vehicle</Link>
                              </button>
                     </div>
                     
@@ -239,105 +286,114 @@ const ShowAllServiceHistory = () => {
                         <i className="bx bx-bell text-xl"></i>
                         <div className="flex items-center space-x-2">
                             <img
-                                src="https://randomuser.me/api/portraits/men/11.jpg"
-                                alt="user"
-                                className="h-8 w-8 rounded-full"
+                                src="https://randomuser.me/api/portraits/men/1.jpg"
+                                alt="User"
+                                className="w-8 h-8 rounded-full"
                             />
-                            <span>Tom Cook</span>
-                            <i className="bx bx-chevron-down text-xl"></i>
+                            <span>John Doe</span>
                         </div>
                     </div>
                 </header>
-                
                 <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-6 ${darkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-black'}`}>
                     <div className="flex flex-col items-center">
                         <h3 className="text-5xl font-extrabold text-dark-grey-900">
                             <CountUp id="countto1" end={250} />
+                            +
                         </h3>
-                        <span>Total Customers</span>
-                    </div>
-
-                    <div className="flex flex-col items-center">
-                        <h3 className="text-5xl font-extrabold text-dark-grey-900">
-                            <CountUp id="countto2" end={120} />
-                        </h3>
-                        <span>Service History</span>
+                        <p className="text-base font-medium text-dark-grey-600">Successful Projects</p>
                     </div>
                     <div className="flex flex-col items-center">
                         <h3 className="text-5xl font-extrabold text-dark-grey-900">
-                            <CountUp id="countto3" end={110} />
+                            <CountUp id="countto2" end={1200} />
+                            +
                         </h3>
-                        <span>Employees</span>
+                        <p className="text-base font-medium text-dark-grey-600">Happy Customers</p>
                     </div>
-
                     <div className="flex flex-col items-center">
                         <h3 className="text-5xl font-extrabold text-dark-grey-900">
-                            <CountUp id="countto4" end={50} />
+                            <CountUp id="countto3" end={150} />
+                            +
                         </h3>
-                        <span>Total Services</span>
+                        <p className="text-base font-medium text-dark-grey-600">Employees</p>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <h3 className="text-5xl font-extrabold text-dark-grey-900">
+                            <CountUp id="countto4" end={350} />
+                            +
+                        </h3>
+                        <p className="text-base font-medium text-dark-grey-600">Awards Won</p>
                     </div>
                 </div>
-
-     
-                <div className={`p-6  overflow-y-scroll max-w-7xl ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
-
+                {/* Content */}
+                <main className={`p-6  overflow-y-scroll max-w-7xl ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                 <thead className="bg-gray-800 text-white">
-                <tr>
-                                <th className="px-6 py-4 text-left">Customer ID</th>
-                                <th className="px-6 py-4 text-left">Vehicle Number</th>
-                                <th className="px-6 py-4 text-left">Allocated Employee</th>
-                                <th className="px-6 py-4 text-left">Service History</th>
-                                <th className="px-6 py-4 text-left">Service Date</th>
-                                <th className="px-6 py-4 text-left">Mileage</th>
-                                <th className="px-6 py-4 text-left">Package</th>
-                                <th className="px-6 py-4 text-left">Selected Services</th>
-                                <th className="px-6 py-4 text-left">Next Service Mileage</th>
-                                <th className="px-6 py-4 text-left">Actions</th>
+                            <tr>
+                                <th className="py-2 px-4 border-b">#</th>
+                                <th className="py-2 px-4 border-b">Image</th>
+                                <th className="py-2 px-4 border-b">Register Number</th>
+                                <th className="py-2 px-4 border-b">Make</th>
+                                <th className="py-2 px-4 border-b">Model</th>
+                                <th className="py-2 px-4 border-b">Year</th>
+                                <th className="py-2 px-4 border-b">Engine Details</th>
+                                <th className="py-2 px-4 border-b">Transmission</th>
+                                <th className="py-2 px-4 border-b">Color</th>
+                                <th className="py-2 px-4 border-b">Owner</th>
+                                <th className="py-2 px-4 border-b">Username</th>
+                                <th className="py-2 px-4 border-b">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredHistories.length === 0 ? (
-                                <tr>
-                                    <td colSpan="12" className="px-6 py-4 text-center">No Service Histories Found</td>
+                            {filteredVehicles.map((vehicle, index) => (
+                                <tr key={vehicle._id} 
+                                className={index % 2 === 0 ? (darkMode ? 'bg-gray-700' : 'bg-gray-100') : (darkMode ? 'bg-gray-800' : 'bg-white')}
+                                >
+                                    <td className="py-2 px-4 border-b text-center">{index + 1}</td>
+                                    <td className='border px-4 py-2 text-left'>
+        {vehicle.image ? (
+            <img 
+                src={vehicle.image} 
+                alt={vehicle.Register_Number} 
+                className='w-20 h-20 object-cover' 
+                style={styles.image}
+                onError={(e) => { e.target.src = '/path/to/default-image.jpg'; }} // Fallback to default image
+            />
+        ) : (
+            <img 
+                src='/path/to/default-image.jpg' 
+                alt='Default' 
+                className='w-20 h-20 object-cover' 
+            />
+        )}
+    </td>
+                                    <td className="py-2 px-4 border-b text-center">{vehicle.Register_Number}</td>
+                                    <td className="py-2 px-4 border-b text-center">{vehicle.Make}</td>
+                                    <td className="py-2 px-4 border-b text-center">{vehicle.Model}</td>
+                                    <td className="py-2 px-4 border-b text-center">{vehicle.Year}</td>
+                                    <td className="py-2 px-4 border-b text-center">{vehicle.Engine_Details}</td>
+                                    <td className="py-2 px-4 border-b text-center">{vehicle.Transmission_Details}</td>
+                                    <td className="py-2 px-4 border-b text-center">{vehicle.Vehicle_Color}</td>
+                                    <td className="py-2 px-4 border-b text-center">{vehicle.Owner}</td>
+                                    <td className="py-2 px-4 border-b text-center">{vehicle.cusID}</td>
+                                    <td className="py-2 px-4 border-b text-center" style={styles.actionIcons}>
+    <Link to={`/vehicles/${vehicle.Register_Number}`} title="View">
+        <BsInfoCircle className="text-green-500 hover:text-green-700 text-xl" />
+    </Link>
+    <Link to={`/vehicles/edit/${vehicle._id}`} title="Edit">
+        <AiOutlineEdit className="text-yellow-500 hover:text-yellow-700 text-xl" />
+    </Link>
+    <Link to={`/vehicles/delete/${vehicle._id}`} title="Delete">
+        <MdOutlineDelete className="text-red-500 hover:text-red-700 text-xl" />
+    </Link>
+</td>
                                 </tr>
-                            ) : (
-                                filteredHistories.map((history, index) => (
-                                    <tr
-                                        key={history._id}
-                                        className={index % 2 === 0 ? (darkMode ? 'bg-gray-700' : 'bg-gray-100') : (darkMode ? 'bg-gray-800' : 'bg-white')}
-                                        >
-                                        <td className="px-6 py-4">{history.cusID}</td>
-                                        <td className="px-6 py-4">{history.Vehicle_Number}</td>
-                                        <td className="px-6 py-4">{history.Allocated_Employee}</td>
-                                        <td className="px-6 py-4">{history.Service_History}</td>
-                                        <td className="px-6 py-4">{new Date(history.Service_Date).toLocaleDateString()}</td>
-                                        <td className="px-6 py-4">{history.Milage}</td>
-                                        <td className="px-6 py-4">{history.Package}</td>
-                                        <td className="px-6 py-4">{history.selectedServices.join(", ")}</td>
-                                        <td className="px-6 py-4">{history.nextService}</td>
-                                        <td className="px-6 py-4">
-                                            <div style={styles.actionIcons}>
-                                                 <Link to={`/ServiceHistory/${history._id}`}>
-                                                <BsInfoCircle className="text-2xl text-green-800" />
-                                            </Link>
-                                            <Link to={`/ServiceHistory/edit/${history._id}`}>
-                                                <AiOutlineEdit className="text-2xl text-yellow-600" />
-                                            </Link>
-                                            <button onClick={() => handleDelete(history._id)}>
-                                                <MdOutlineDelete className="text-2xl text-red-600" />
-                                            </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
+                            ))}
                         </tbody>
                     </table>
-                </div>
+                </main>
             </div>
         </div>
     );
 };
 
-export default ShowAllServiceHistory;
+export default ShowAllVehicles;
