@@ -325,7 +325,7 @@ const ShowAllVehicles = () => {
                     </div>
                 </div>
                 {/* Content */}
-                <main className={`p-6  overflow-y-scroll max-w-7xl ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
+                <main className={`p-6  overflow-y-scroll  ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`} style={{width:"100%"}}>
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                 <thead className="bg-gray-800 text-white">
                             <tr>
