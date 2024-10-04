@@ -116,7 +116,7 @@ function CreateFeedback() {
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent form default behavior
+        e.preventDefault(); 
 
         if (!validateForm()) {
             return;

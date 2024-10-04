@@ -26,6 +26,8 @@ const inquireSchema = mongoose.Schema({
     Message: {
         type: String,
         required: true,
+    }, cusID: {
+        type: String,
     },
    
 });

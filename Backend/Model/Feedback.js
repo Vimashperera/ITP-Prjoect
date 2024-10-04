@@ -4,6 +4,7 @@ import mongoose, { Schema } from 'mongoose';
 const feedbackSchema = new Schema({
     cusID: {
         type: String,
+        
     },
     name: {
         type: String,

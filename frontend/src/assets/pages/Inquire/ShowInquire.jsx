@@ -252,15 +252,15 @@ const ShowInquire = () => {
 
                     <div className="flex items-center space-x-4">
                         <i className="bx bx-bell text-xl"></i>
-                        <div className="flex items-center space-x-2">
+                        {/* <div className="flex items-center space-x-2">
                             <img
                                 src="https://randomuser.me/api/portraits/men/11.jpg"
                                 alt="user"
                                 className="h-8 w-8 rounded-full"
                             />
-                            <span>Tom Cook</span>
+                            <span>Inquire Admin</span>
                             <i className="bx bx-chevron-down text-xl"></i>
-                        </div>
+                        </div> */}
                     </div>
                 </header>
 
