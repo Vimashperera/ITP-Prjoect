@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
+
+import ShowAllVacancy from "./assets/pages/Vacancy/ShowAllVacancy";
+import CreateVacancy from "./assets/pages/Vacancy/CreateVacancy";
+import ReadOneVacancy from "./assets/pages/Vacancy/ReadOneVacancy";
+import EditVacancy from "./assets/pages/Vacancy/EditVacancy";
+
+import ShowAllApplicant from "./assets/pages/Applicant/ShowAllApplicant";
+import CreateApplicant from "./assets/pages/Applicant/CreateApplicant";
+import ReadOneApplicant from "./assets/pages/Applicant/ReadOneApplicant";
+import EditApplicant from "./assets/pages/Applicant/EditApplicant";
 import ShowAllBooking from "./assets/pages/Booking/ShowAllBooking";
 import CreateBooking from "./assets/pages/Booking/CreateBooking";
 import EditBooking from "./assets/pages/Booking/EditBooking";
