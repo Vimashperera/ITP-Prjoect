@@ -1,5 +1,6 @@
 // Importing the Express library
 import express from 'express';
+import mongoose from 'mongoose';
 
 import { Inquire } from '../Model/Inquire.js';
 
@@ -10,13 +11,14 @@ const router = express.Router();
 router.post('/', async (request, response) => {
     try {
         // Validate request body fields
-        const { Name, Number, Email, ServiceType, VehicleNumber, Message} = request.body;
+        const { Name, Number, Email, ServiceType, VehicleNumber, Message,cusID} = request.body;
 
      
 
         // Creating a new Inquire item with the provided data
         const newInquire = {
             Name,
+            cusID,
             Number,
             Email,
             ServiceType,
@@ -55,23 +57,32 @@ router.get('/', async (request, response) => {
     }
 });
 
-// Route for retrieving a specific inquire item by ID
-router.get('/:id', async (request, response) => {
+// Route for retrieving a specific inquire item by ID or cusID
+router.get('/:identifier', async (request, response) => {
     try {
-        // Extracting the inquire item ID from the request parameters
-        const { id } = request.params;
+        const { identifier } = request.params;
 
-        // Fetching a menu item from the database based on the ID
-        const inquire = await Inquire.findById(id);
-        
-        // Sending the fetched menu item as a JSON response
-        response.status(200).json(inquire);
+        // Check if the identifier is a valid ObjectId
+        if (mongoose.Types.ObjectId.isValid(identifier)) {
+            const inquireByID = await Inquire.findById(identifier);
+            if (inquireByID) {
+                return response.status(200).json(inquireByID);
+            }
+        }
+
+        // If not an ObjectId, check for cusID
+        const inquireByCUSID = await Inquire.find({ cusID: identifier });
+        if (inquireByCUSID.length > 0) {
+            return response.status(200).json(inquireByCUSID);
+        }
+
+        response.status(404).json({ message: 'Inquire not found' });
     } catch (error) {
-        // Handling errors and sending an error response
-        console.error(error.message);
-        response.status(500).json({ message: error.message });
+        console.error(error);
+        response.status(500).send({ message: 'Error fetching inquire: ' + error.message });
     }
 });
+
 
 // Route for updating a inquire item by ID
 router.put('/:id', async (request, response) => {
@@ -128,3 +139,4 @@ router.delete('/:id', async(request, response) => {
 
 // Exporting the Express router
 export default router;
+
