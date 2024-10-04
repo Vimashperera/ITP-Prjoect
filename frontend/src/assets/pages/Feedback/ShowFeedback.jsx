@@ -137,9 +137,7 @@ const ShowFeedback = () => {
                     </div>
                     <nav className="flex-1 overflow-y-auto">
                         <ul className="mt-2">
-                            <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
-                                <Link to="/Customer">Customer Details</Link>
-                            </li>
+                            
                             <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
                                 <Link to="/feedback">Feedback</Link>
                             </li>
@@ -182,9 +180,9 @@ const ShowFeedback = () => {
                         >
                             {darkMode ? 'Light Mode' : 'Dark Mode'}
                         </button>
-                        <button className="mt-1 ml-3 inline-block px-8 py-2.5 text-white bg-gray-800 text-sm uppercase rounded-full">
+                        {/* <button className="mt-1 ml-3 inline-block px-8 py-2.5 text-white bg-gray-800 text-sm uppercase rounded-full">
                             <Link to="/feedback/create">Give Feedback</Link>
-                        </button>
+                        </button> */}
                     </div>
                 </header>
 
