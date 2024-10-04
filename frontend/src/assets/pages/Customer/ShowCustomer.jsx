@@ -187,7 +187,7 @@ const ShowCustomer = () => {
                                 </li>
 
 
-                                <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3 flex items-center space-x-3">
+                                {/* <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3 flex items-center space-x-3">
                                 <a href="/feedback" className="flex items-center space-x-3">
                                    <i className="bx bx-home-alt text-xl"></i>
                                       <span>Feedback</span>
@@ -200,19 +200,19 @@ const ShowCustomer = () => {
                                    <i className="bx bx-home-alt text-xl"></i>
                                       <span>Inquire</span>
                                       </a>
-                                </li>
+                                </li> */}
                             {isCustomerOpen && (
                                 <ul className="ml-8">
                                     <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
                                         <Link to="/Customer">Customer Details</Link>
                                     </li>
-                                    <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
+                                    {/* <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
                                         <Link to="/feedback">Feedback</Link>
                                     </li>
 
                                     <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
                                         <Link to="/Inquire">Inquire</Link>
-                                    </li>
+                                    </li> */}
 
                                 </ul>
                             )}

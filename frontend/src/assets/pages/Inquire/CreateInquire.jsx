@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import {  Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Swal from "sweetalert2";
 import img1 from '../../images/bg02.jpg';
 import NavBar1 from '../Navbar/NavBar1';
@@ -22,16 +22,27 @@ const CreateInquire = () => {
   const validateForm = () => {
     const phonePattern = /^[0][0-9]{9}$/;
     const namePattern = /^[a-zA-Z\s]*$/;
-
-    if (!namePattern.test(Name)) {
+    const emailPattern = /^[^\s@]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
+    const vehicleNumberPattern = /^(?=.*\d)([A-Za-z\d-]{1,8})$/; // Updated pattern to require at least one digit, and allow letters and hyphens, but max 10 characters
+  
+    if (!namePattern.test(Name) || Name.trim() === "") {
       Swal.fire({
         icon: "error",
         title: "Invalid Name",
-        text: "Name can't contain numbers or special characters.",
+        text: "Name can't contain numbers, special characters, or be empty.",
       });
       return false;
     }
-
+  
+    if (!emailPattern.test(Email)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email",
+        text: "Please enter a valid email address. After '@', only letters are allowed.",
+      });
+      return false;
+    }
+  
     if (!phonePattern.test(Number)) {
       Swal.fire({
         icon: "error",
@@ -40,10 +51,29 @@ const CreateInquire = () => {
       });
       return false;
     }
-
+  
+    if (!ServiceType) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Service Type Not Selected',
+        text: 'Please select a service type.',
+      });
+      return false;
+    }
+  
+    if (!vehicleNumberPattern.test(VehicleNumber)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Vehicle Number",
+        text: "Vehicle number must contain at least 4 digits up to 8. Don't keep space",
+      });
+      return false;
+    }
+  
     return true;
   };
-
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -87,9 +117,9 @@ const CreateInquire = () => {
     },
     image: {
       borderRadius: "30px",
-      maxWidth: "240px",
+      maxWidth: "280px",
       padding: "0px",
-      height: "632px",
+      height: "658px",
       borderTopRightRadius: "0px",
       borderBottomRightRadius: "0px",
     },
@@ -158,11 +188,10 @@ const CreateInquire = () => {
       color: "#fff",
       fontSize: "16px",
       width: "auto",
-     
+
       cursor: "pointer",
       textDecoration: "none",
     },
-   
   };
   return (
     <div>
@@ -218,10 +247,15 @@ const CreateInquire = () => {
             type="text"
             placeholder="Message"
             value={Message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length <= 100) {
+                setMessage(e.target.value);
+              }
+            }}
             required
             style={styles.input}
           />
+          <p>{Message.length}/100</p>
           <input
             type="text"
             placeholder="Vehicle Number"
@@ -234,12 +268,12 @@ const CreateInquire = () => {
             type="submit"
             style={styles.submitButton}
             onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              styles.submitButtonHover.backgroundColor)
+              (e.currentTarget.style.backgroundColor =
+                styles.submitButtonHover.backgroundColor)
             }
             onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              styles.submitButton.backgroundColor)
+              (e.currentTarget.style.backgroundColor =
+                styles.submitButton.backgroundColor)
             }
           >
             {loading ? "Submitting..." : "Submit"}

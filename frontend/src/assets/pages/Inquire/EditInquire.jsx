@@ -52,18 +52,58 @@ const EditInquire = () => {
 
   const validateForm = () => {
     const phonePattern = /^[0][0-9]{9}$/;
-
-    if (!phonePattern.test(Number)) {
+    const namePattern = /^[a-zA-Z\s]*$/;
+    const emailPattern = /^[^\s@]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
+    const vehicleNumberPattern = /^(?=.*\d)([A-Za-z\d-]{1,8})$/; // Updated pattern to require at least one digit, and allow letters and hyphens, but max 10 characters
+  
+    if (!namePattern.test(Name) || Name.trim() === "") {
       Swal.fire({
-        icon: 'error',
-        title: 'Invalid Phone Number',
-        text: 'Phone number should be a 10-digit number starting with 0.',
+        icon: "error",
+        title: "Invalid Name",
+        text: "Name can't contain numbers, special characters, or be empty.",
       });
       return false;
     }
-
+  
+    if (!emailPattern.test(Email)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email",
+        text: "Please enter a valid email address. After '@', only letters are allowed.",
+      });
+      return false;
+    }
+  
+    if (!phonePattern.test(Number)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Phone Number",
+        text: "Phone number should be a 10-digit number starting with 0.",
+      });
+      return false;
+    }
+  
+    if (!ServiceType) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Service Type Not Selected',
+        text: 'Please select a service type.',
+      });
+      return false;
+    }
+  
+    if (!vehicleNumberPattern.test(VehicleNumber)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Vehicle Number",
+        text: "Vehicle number must contain at least 4 digits up to 8. Don't keep space",
+      });
+      return false;
+    }
+  
     return true;
   };
+  
 
   const handleEditInquire = async (e) => {
     e.preventDefault();
@@ -108,7 +148,7 @@ const EditInquire = () => {
       borderRadius: "30px",
       maxWidth: "240px",
       padding: "0px",
-      height: "632px",
+      height: "658px",
       borderTopRightRadius: "0px",
       borderBottomRightRadius: "0px",
     },
@@ -217,10 +257,15 @@ const EditInquire = () => {
           type="text"
           placeholder="Message"
           value={Message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length <= 100) {
+              setMessage(e.target.value);
+            }
+          }}
           required
           style={styles.input}
         />
+        <p>{Message.length}/100</p>
         <input
           type="text"
           placeholder="Vehicle Number"
