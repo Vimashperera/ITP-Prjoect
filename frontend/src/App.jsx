@@ -31,6 +31,20 @@ const App = () => {
 
   return (
     <Routes>
+
+<Route path="/applicant/:cusID" element={<OneApplicantShow />} />
+      <Route path="/cLogin" element={<CLogin />}></Route>
+      <Route path="" element={<Home />} />
+      <Route path="/vacancy" element={<ShowAllVacancy />} />
+      <Route path="/vacancy/create" element={<CreateVacancy />} />{" "}
+      {/*used this route to check tailwind css*/}
+      <Route path="/vacancy/get/:id" element={<ReadOneVacancy />} />
+      <Route path="/vacancy/edit/:id" element={<EditVacancy />} />
+      <Route path="/applicant" element={<ShowAllApplicant />} />
+      <Route path="/applicant/create/:cusID" element={<CreateApplicant />} />
+      <Route path="/applicant/create" element={<CreateApplicant />} />
+      <Route path="/applicant/get/:id" element={<ReadOneApplicant />} />
+      <Route path="/applicant/edit/:id" element={<EditApplicant />} />
       <Route path="/ServiceHistory/create" element={<CreateServiceHistory />} />
       <Route path="/ServiceHistory/edit/:id" element={<EditShowHistory />} />
       <Route
