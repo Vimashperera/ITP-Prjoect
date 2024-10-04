@@ -164,7 +164,12 @@ const ShowInquire = () => {
         </div>
         <nav className="flex-1">
             <ul className="mt-2">
-        
+            <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3 flex items-center space-x-3">
+                                <a href="/Customer" className="flex items-center space-x-3">
+                                   <i className="bx bx-home-alt text-xl"></i>
+                                      <span>Customer Details</span>
+                                      </a>
+                                </li>
 
 
                                 <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3 flex items-center space-x-3">
@@ -195,7 +200,9 @@ const ShowInquire = () => {
                 </li>
                 {isCustomerOpen && (
                     <ul className="ml-8">
-                        
+                        <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
+                            <Link to="/Customer">Customer Details</Link>
+                        </li>
                         <li className="text-gray-400 hover:bg-gray-700 hover:text-white p-3">
                             <Link to="/feedback">Feedback</Link>
                         </li>
@@ -252,15 +259,15 @@ const ShowInquire = () => {
 
                     <div className="flex items-center space-x-4">
                         <i className="bx bx-bell text-xl"></i>
-                        {/* <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2">
                             <img
                                 src="https://randomuser.me/api/portraits/men/11.jpg"
                                 alt="user"
                                 className="h-8 w-8 rounded-full"
                             />
-                            <span>Inquire Admin</span>
+                            <span>Tom Cook</span>
                             <i className="bx bx-chevron-down text-xl"></i>
-                        </div> */}
+                        </div>
                     </div>
                 </header>
 

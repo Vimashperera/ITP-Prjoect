@@ -44,7 +44,6 @@ const CreatePromotion = () => {
     }));
   };
 
-
   // Select or deselect services and calculate discount
   const handleServiceSelect = (serviceName, servicePrice) => {
     let updatedSelectedServices = [];
@@ -297,4 +296,3 @@ const CreatePromotion = () => {
 };
 
 export default CreatePromotion;
-

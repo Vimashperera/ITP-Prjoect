@@ -129,7 +129,7 @@ const RepairEstimateList = () => {
       justifyContent: "space-around",
     },
   };
-//Start HTML 
+
   return (
     <div className={`flex ${darkMode ? "bg-gray-900 " : "bg-white "}`}>
       <Sidebar isOpen={sidebarOpen} />
@@ -181,7 +181,7 @@ const RepairEstimateList = () => {
                 >
                   {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
                 </button>
-                <img //Tom cook
+                <img
                   src="https://randomuser.me/api/portraits/men/11.jpg"
                   alt="user"
                   className="h-8 w-8 rounded-full"
@@ -231,7 +231,7 @@ const RepairEstimateList = () => {
               style={{ height: "220px" }}
               onClick={() => handleNavigate(rep._id)}
             >
-              <div className="col-span-1"> {/*backend eken ena photos dispaly wenewa */}
+              <div className="col-span-1">
                 <img
                   className="rounded-l-2xl object-cover"
                   src={rep.photoURL}
@@ -260,7 +260,7 @@ const RepairEstimateList = () => {
 
                   <div className="mt-4 flex">
                     <button
-                      type="button"//delete button
+                      type="button"
                       className="bg-pink-600 text-black text-xl px-4 py-2 rounded-md mr-4"
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent the click event from bubbling up

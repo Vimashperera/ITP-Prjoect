@@ -10,7 +10,6 @@ import Navbar from '../Navbar/Navbar';
 import Footer from '../footer/Footer';
 
 export const CreateVehicle = () => {
-  const [vehicle, setVehicle] = useState('');
   const [cusID, setCusID] = useState('');
   const [Register_Number, setRegister_Number] = useState('');
   const [Make, setMake] = useState('');
@@ -44,72 +43,56 @@ export const CreateVehicle = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate the vehicle number format
     if (!validateVehicleNumber(Register_Number)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Invalid Vehicle Number',
-            text: 'Please enter a valid vehicle number.',
-        });
-        return;
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Vehicle Number',
+        text: 'Please enter a valid vehicle number.',
+      });
+      return;
     }
 
     setLoading(true);
 
     try {
-        // Step 1: Check if the vehicle number is already registered
-        const existingVehicleResponse = await axios.get(`http://localhost:8077/Vehicle?Register_Number=${Register_Number}`);
+      let imageUrl = '';
 
-        if (existingVehicleResponse.data.length > 0) {
-            // If the vehicle number already exists, show a specific alert for duplicate registration
+      if (image) {
+        const storageRef = ref(storage, `vehicleImages/${image.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, image);
+
+        uploadTask.on(
+          'state_changed',
+          null,
+          (error) => {
+            console.error('Error uploading image to Firebase:', error);
             Swal.fire({
-                icon: 'warning',
-                title: 'Vehicle Already Registered',
-                text: 'This vehicle number is already registered in the system. Please use a different vehicle number.',
+              icon: 'error',
+              title: 'Upload Error',
+              text: `Failed to upload file: ${error.message}`,
             });
-            setLoading(false); // Stop loading since we are not proceeding
-            return; // Prevent further execution
-        }
-
-        // Step 2: Proceed with your existing logic (e.g., image handling)
-        let imageUrl = ''; // Placeholder for the image URL
-
-        if (image) {
-            const storageRef = ref(storage, `vehicleImages/${image.name}`);
-            const uploadTask = uploadBytesResumable(storageRef, image);
-
-            uploadTask.on(
-                'state_changed',
-                null,
-                (error) => {
-                    console.error('Error uploading image to Firebase:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Upload Error',
-                        text: `Failed to upload file: ${error.message}`,
-                    });
-                    createVehicle(imageUrl); // Proceed without image
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        imageUrl = downloadURL;
-                        createVehicle(imageUrl); // Proceed with the image URL
-                    });
-                }
-            );
-        } else {
-            createVehicle(imageUrl); // Proceed without image if none is provided
-        }
+            createVehicle(imageUrl); // Proceed without image
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              imageUrl = downloadURL;
+              createVehicle(imageUrl);
+            });
+          }
+        );
+      } else {
+        createVehicle(imageUrl); // Proceed without image
+      }
     } catch (error) {
-        setLoading(false); // Stop loading if there is an error
-        console.error('Error during the vehicle creation process:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Vehicle Already Registered',
-            text: `This vehicle number is already registered in the system. Error details: ${error.response ? error.response.data.message : error.message}`,
-        });
+      setLoading(false);
+      console.error('Error creating vehicle:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error creating vehicle. Please try again.',
+      });
     }
-};
+  };
 
   // Fetch customer data on component mount
   useEffect(() => {
@@ -120,9 +103,7 @@ export const CreateVehicle = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(`http://localhost:8077/Customer`);
-      const vehicleData = await axios.get('http://localhost:8077/Vehicle')
       setCustomers(response.data); // Update customers state with fetched data
-      setVehicle(vehicleData.data.data);
     } catch (error) {
       console.error('There was an error fetching data!', error);
       Swal.fire('Error', 'Failed to fetch data. Please try again.', 'error');
@@ -164,7 +145,7 @@ export const CreateVehicle = () => {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'This vehicle number is already registered in the system.',
+          text: 'An error occurred while creating the vehicle. Please try again.',
         });
       });
   };

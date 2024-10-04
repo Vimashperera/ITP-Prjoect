@@ -10,6 +10,11 @@ const promotionSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    includes: [String], 
+    Percentage: {
+        type: Number,
+        required: true,
+    },
     discount: {
         type: Number,
         required: true,
@@ -21,6 +26,10 @@ const promotionSchema = mongoose.Schema({
     endDate: {
         type: Date,
         required: true,
+    },
+    status: { //add status field for store is promotin active or not0828
+        type: Boolean,
+        default : true,
     }
 }, { timestamps: true });
 

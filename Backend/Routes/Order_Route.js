@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import Order from '../Model/Order.js'; // Ensure correct casing in the filename
+import Order from '../Model/order.js'; // Ensure correct casing in the filename
 
 const router = express.Router();
 

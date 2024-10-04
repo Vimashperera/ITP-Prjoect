@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 // Defining the vacency Schema
 const vacancySchema = mongoose.Schema({
+
+    VacancyID: {
+        type: String,     
+    },
+
     Name: {
         type: String,
         required: true,

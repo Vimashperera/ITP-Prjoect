@@ -173,7 +173,7 @@ const Cart = () => {
             Apply Promo Code
           </button>
           <button
-            className="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition duration-300"
+            className="w-full bg-red-500 text-white py-2 rounded-full hover:bg-red-600 transition duration-300"
             onClick={handleCheckout}
           >
             Checkout

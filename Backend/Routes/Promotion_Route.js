@@ -6,17 +6,18 @@ const router = express.Router();
 // Create a new promotion
 router.post('/', async (req, res) => {
     try {
-        const { title, description, discount, startDate, endDate } = req.body;
+        const { title, description, discount, startDate, endDate, includes, Percentage } = req.body;
 
-        if (!title || !description || discount === undefined || !startDate || !endDate) {
+        // Validate required fields
+        if (!title || !description || discount === undefined || !startDate || !endDate || !includes || Percentage === undefined) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
-        const promotion = new Promotion({ title, description, discount, startDate, endDate });
+        const promotion = new Promotion({ title, description, discount, startDate, endDate, includes, Percentage });
         await promotion.save();
         res.status(201).json(promotion);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
@@ -44,16 +45,19 @@ router.get('/:id', async (req, res) => {
 // Update a promotion by ID
 router.patch('/:id', async (req, res) => {
     try {
-        const { title, description, discount, startDate, endDate } = req.body;
+        const { title, description, discount, startDate, endDate, includes, Percentage } = req.body;
 
         const promotion = await Promotion.findById(req.params.id);
         if (!promotion) return res.status(404).json({ message: 'Promotion not found' });
 
+        // Update fields if they are provided
         if (title) promotion.title = title;
         if (description) promotion.description = description;
         if (discount !== undefined) promotion.discount = discount;
         if (startDate) promotion.startDate = startDate;
         if (endDate) promotion.endDate = endDate;
+        if (includes) promotion.includes = includes;
+        if (Percentage !== undefined) promotion.Percentage = Percentage;
 
         await promotion.save();
         res.json(promotion);
@@ -67,7 +71,7 @@ router.delete('/:id', async (req, res) => {
     try {
         const promotion = await Promotion.findByIdAndDelete(req.params.id);
         if (!promotion) return res.status(404).json({ message: 'Promotion not found' });
-        res.json({ message: 'Promotion deleted' });
+        res.json({ message: 'Promotion deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

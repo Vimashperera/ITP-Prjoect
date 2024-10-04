@@ -104,6 +104,7 @@ const EditBooking = () => {
       );
     }
   };
+
   const validateForm = () => {
     const { Booking_Date, Customer_Name, Contact_Number, Vehicle_Number } = booking;
     const today = new Date().toISOString().split("T")[0];

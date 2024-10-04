@@ -39,8 +39,9 @@ const CreateBooking = () => {
     };
     fetchPromotions();
   }, []);
-   // Fetch services from API
-   useEffect(() => {
+
+  // Fetch services from API
+  useEffect(() => {
     setLoading(true);
     axios
       .get("http://localhost:8077/service")
@@ -151,12 +152,6 @@ const CreateBooking = () => {
       };
       await axios.post("http://localhost:8077/Booking", requestBody);
 
-      const reqbody = {
-        ...booking,
-        selectedServices,
-      };
-      await axios.post("http://localhost:8077/Booking", reqbody);
-
       Swal.fire("Success", "Booking created successfully!", "success");
       navigate(`/ReadOneHome/${cusID}`);
 
@@ -173,234 +168,229 @@ const CreateBooking = () => {
       setLoading(false);
     }
   };
-    // Fetch customer data if cusID exists
-    const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:8077/Customer/${cusID}`
-          );
-          setBooking(response.data); // Update booking state with fetched data
-        } catch (error) {
-          console.error("There was an error fetching data!", error);
-          Swal.fire("Error", "Failed to fetch data. Please try again.", "error");
-        }
-      };
-    
-      const styles = {
-        container: {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-          padding: "20px",
-          fontFamily: '"Noto Sans", sans-serif',
-        },
-        backButton: {
-          marginBottom: "50%",
-          marginLeft: "-80%",
-          position: "absolute",
-        },
-        image: {
-          borderRadius: "30px",
-          maxWidth: "240px",
-          padding: "0px",
-          height: "695px",
-          borderTopRightRadius: "0px",
-          borderBottomRightRadius: "0px",
-        },
-        form: {
-          borderRadius: "30px",
-          backgroundColor: "#1a1a1a",
-          color: "#fff",
-          maxWidth: "450px",
-          padding: "20px",
-          height: "auto",
-          borderTopLeftRadius: "0px",
-          borderBottomLeftRadius: "0px",
-        },
-        title: {
-          color: "#6c1c1d",
-          fontSize: "30px",
-          fontWeight: "600",
-          paddingLeft: "30px",
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-        },
-        input: {
-          backgroundColor: "#333",
-          color: "#fff",
-          border: "1px solid rgba(105, 105, 105, 0.397)",
-          borderRadius: "10px",
-          fontSize: "1rem",
-          padding: "15px 8px",
-          outline: "0",
-          width: "100%",
-          marginTop: "20px",
-          marginBottom: "20px",
-        },
-        flex: {
-          display: "flex",
-          gap: "8px",
-          marginTop: "15px",
-        },
-        submitButton: {
-          border: "none",
-          backgroundColor: "#6c1c1d",
-          marginTop: "10px",
-          outline: "none",
-          padding: "10px",
-          borderRadius: "10px",
-          color: "#fff",
-          fontSize: "16px",
-          width: "100%",
-          cursor: "pointer",
-        },
-        submitButtonHover: {
-          backgroundColor: "#661003f5",
-        },
-      };
-    
-      return (
-        <div className="">
-          <Navbar1 />
-          <div style={styles.container}>
-            <img src={img1} style={styles.image} alt="car" />
-            <form onSubmit={handleSubmit} style={styles.form}>
-              <h2 style={styles.title}>Create Booking</h2>
-              <div style={styles.flex}>
-                <input
-                  type="date"
-                  name="Booking_Date"
-                  placeholder="Booking Date"
-                  value={booking.Booking_Date}
-                  onChange={handleChange}
-                  required
-                  style={styles.input}
-                />
-                <input
-                  type="text"
-                  name="Customer_Name"
-                  placeholder="Customer Name"
-                  value={booking.Customer_Name}
-                  onChange={handleChange}
-                  required
-                  style={styles.input}
-                />
-              </div>
-              <div style={styles.flex}>
-                <input
-                  type="text"
-                  name="Vehicle_Type"
-                  placeholder="Vehicle Type"
-                  value={booking.Vehicle_Type}
-                  onChange={handleChange}
-                  required
-                  style={styles.input}
-                />
-                <input
-                  type="text"
-                  name="Vehicle_Number"
-                  placeholder="Vehicle Number"
-                  value={booking.Vehicle_Number}
-                  onChange={handleChange}
-                  required
-                  style={styles.input}
-                />
-              </div>
-              <div style={styles.flex}>
-                <input
-                  type="text"
-                  name="Contact_Number"
-                  placeholder="Contact Number"
-                  value={booking.Contact_Number}
-                  onChange={handleChange}
-                  required
-                  style={styles.input}
-                />
-                <input
-                  type="email"
-                  name="Email"
-                  placeholder="Email"
-                  value={booking.Email}
-                  onChange={handleChange}
-                  required
-                  style={styles.input}
-                />
-              </div>
-    
-              <div style={styles.flex}>
-                <label>Package</label>
-                <select
-                  name="selectedPackage"
-                  value={booking.selectedPackage}
-                  onChange={handlePackageChange}
-                  style={styles.input}
-                >
-                  <option value="">Select Package</option>
-                  {promotion.map((promotion) => (
-                    <option key={promotion._id} value={promotion.title}>
-                      {promotion.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-    
-              {/* Includes Service Selection */}
-              <div style={{ marginTop: "20px" }}>
-                <label style={{ fontSize: "18px", marginBottom: "10px" }}>
-                  Includes:
-                </label>
-    
-                <label style={{ fontSize: "18px", marginBottom: "10px" }}>
-                  Includes:
-                </label>
-    
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-                  {services.map((service) => (
-                    <div key={service._id} style={{ flex: "1 1 45%" }}>
-                      <input
-                        type="checkbox"
-                        id={service._id}
-                        name="selectedServices"
-                        value={service.Servicename}
-                        onChange={(e) =>
-                          setSelectedServices([
-                            ...selectedServices,
-                            service.Servicename,
-                          ])
-                        }
-                      />
-                      <label htmlFor={service._id} style={{ marginLeft: "10px" }}>
-                        {service.Servicename} (${service.Price})
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-    
-              <button
-                type="submit"
-                style={styles.submitButton}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor =
-                    styles.submitButtonHover.backgroundColor)
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor =
-                    styles.submitButton.backgroundColor)
-                }
-              >
-                {loading ? "Submitting..." : "Submit"}
-              </button>
-            </form>
-          </div>
-          <Footer />
-        </div>
+
+  // Fetch customer data if cusID exists
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8077/Customer/${cusID}`
       );
-    };
-    
-    export default CreateBooking;
-    
+      setBooking(response.data); // Update booking state with fetched data
+    } catch (error) {
+      console.error("There was an error fetching data!", error);
+      Swal.fire("Error", "Failed to fetch data. Please try again.", "error");
+    }
+  };
 
+  const styles = {
+    container: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: "100vh",
+      padding: "20px",
+      fontFamily: '"Noto Sans", sans-serif',
+    },
+    backButton: {
+      marginBottom: "50%",
+      marginLeft: "-80%",
+      position: "absolute",
+    },
+    image: {
+      borderRadius: "30px",
+      maxWidth: "240px",
+      padding: "0px",
+      height: "695px",
+      borderTopRightRadius: "0px",
+      borderBottomRightRadius: "0px",
+    },
+    form: {
+      borderRadius: "30px",
+      backgroundColor: "#1a1a1a",
+      color: "#fff",
+      maxWidth: "450px",
+      padding: "20px",
+      height: "auto",
+      borderTopLeftRadius: "0px",
+      borderBottomLeftRadius: "0px",
+    },
+    title: {
+      color: "#6c1c1d",
+      fontSize: "30px",
+      fontWeight: "600",
+      paddingLeft: "30px",
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+    },
+    input: {
+      backgroundColor: "#333",
+      color: "#fff",
+      border: "1px solid rgba(105, 105, 105, 0.397)",
+      borderRadius: "10px",
+      fontSize: "1rem",
+      padding: "15px 8px",
+      outline: "0",
+      width: "100%",
+      marginTop: "20px",
+      marginBottom: "20px",
+    },
+    flex: {
+      display: "flex",
+      gap: "8px",
+      marginTop: "15px",
+    },
+    submitButton: {
+      border: "none",
+      backgroundColor: "#6c1c1d",
+      marginTop: "10px",
+      outline: "none",
+      padding: "10px",
+      borderRadius: "10px",
+      color: "#fff",
+      fontSize: "16px",
+      width: "100%",
+      cursor: "pointer",
+    },
+    submitButtonHover: {
+      backgroundColor: "#661003f5",
+    },
+  };
 
+  return (
+    <div className="">
+      <Navbar1 />
+      <div style={styles.container}>
+        <img src={img1} style={styles.image} alt="car" />
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <h2 style={styles.title}>Create Booking</h2>
+          <div style={styles.flex}>
+            <input
+              type="date"
+              name="Booking_Date"
+              placeholder="Booking Date"
+              value={booking.Booking_Date}
+              onChange={handleChange}
+              min={new Date().toISOString().split("T")[0]}
+              required
+              style={styles.input}
+            />
+            <input
+              type="text"
+              name="Customer_Name"
+              placeholder="Customer Name"
+              value={booking.Customer_Name}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.flex}>
+            <input
+              type="text"
+              name="Vehicle_Type"
+              placeholder="Vehicle Type"
+              value={booking.Vehicle_Type}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+            <input
+              type="text"
+              name="Vehicle_Number"
+              placeholder="Vehicle Number"
+              value={booking.Vehicle_Number}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.flex}>
+            <input
+              type="text"
+              name="Contact_Number"
+              placeholder="Contact Number"
+              value={booking.Contact_Number}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+            <input
+              type="email"
+              name="Email"
+              placeholder="Email"
+              value={booking.Email}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+
+          <div style={styles.flex}>
+            <label>Package</label>
+            <select
+              name="selectedPackage"
+              value={booking.selectedPackage}
+              onChange={handlePackageChange}
+              style={styles.input}
+            >
+              <option value="">Select Package</option>
+              {promotion.map((promotion) => (
+                <option key={promotion._id} value={promotion.title}>
+                  {promotion.title}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Includes Service Selection */}
+          <div style={{ marginTop: "20px" }}>
+            <label style={{ fontSize: "18px", marginBottom: "10px" }}>
+              Includes:
+            </label>
+
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+              {services.map((service) => (
+                <div key={service._id} style={{ flex: "1 1 45%" }}>
+                  <input
+                    type="checkbox"
+                    id={service._id}
+                    name="selectedServices"
+                    value={service.Servicename}
+                    onChange={(e) =>
+                      setSelectedServices([
+                        ...selectedServices,
+                        service.Servicename,
+                      ])
+                    }
+                  />
+                  <label htmlFor={service._id} style={{ marginLeft: "10px" }}>
+                    {service.Servicename} (${service.Price})
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            style={styles.submitButton}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor =
+                styles.submitButtonHover.backgroundColor)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor =
+                styles.submitButton.backgroundColor)
+            }
+          >
+            {loading ? "Submitting..." : "Submit"}
+          </button>
+        </form>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default CreateBooking;

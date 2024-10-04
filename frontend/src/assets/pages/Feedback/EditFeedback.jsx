@@ -145,7 +145,7 @@ function EditFeedback() {
           borderRadius: "30px",
           maxWidth: "240px",
           padding: "0px",
-          height: "633px",
+          height: "620px",
           borderTopRightRadius: "0px",
           borderBottomRightRadius: "0px",
         },
@@ -209,7 +209,7 @@ function EditFeedback() {
         <div className=''>
             <Navbar />
             <div style={styles.container}>
-                
+                <BackButton destination={`/feedback`} style={styles.backButton} />
                 <img src={img1} style={styles.image} alt="car" />
                 <form onSubmit={handleSubmit} style={styles.form}>
                     <h2 style={styles.title}>Edit Feedback</h2>
@@ -242,7 +242,6 @@ function EditFeedback() {
                             placeholder="Email"
                             value={feedback.email}
                             onChange={handleChange}
-                            readOnly
                             required
                             style={styles.input}
                         />
@@ -265,7 +264,7 @@ function EditFeedback() {
                             required
                             style={styles.input}
                         >
-                            <option value="" disabled>Select Employee</option>
+                            <option value="">Select Employee</option>
                             {employees.map((employee) => (
                                 <option key={employee.value} value={employee.value}>
                                     {employee.label}
@@ -277,17 +276,14 @@ function EditFeedback() {
                             <div>{renderStars()}</div>
                         </div>
                     </div>
-                
                     <textarea
                         name="message"
                         placeholder="Message"
-                        maxLength={100}
                         value={feedback.message}
                         onChange={handleChange}
                         required
                         style={{ ...styles.input, height: '100px' }}
                     />
-                    <p>Upto 100 characters</p>
                     <button
                         type="submit"
                         style={styles.submitButton}

@@ -45,7 +45,6 @@ const ShowOneEstimate = () => {
   const handleBackClick = () => {
     navigation(-1);
   };
-  //Start HTML
   return (
     <div className={`flex ${darkMode ? "bg-gray-900 " : "bg-white "}`}>
       <Sidebar isOpen={sidebarOpen} />
