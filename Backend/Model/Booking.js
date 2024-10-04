@@ -38,6 +38,11 @@ const BookingSchema = mongoose.Schema({
     },
     selectedServices: {
         type: [String],
+    },
+    status: {
+        type: String,
+        enum: ['Pending', 'Confirmed', 'Cancelled' ],
+        default: 'Pending'
     }
 });
 
@@ -67,4 +72,4 @@ BookingSchema.pre('save', async function (next) {
 });
 
 // Export the Booking model
-export const Booking = mongoose.model('Booking', BookingSchema);
+export const Booking = mongoose.model('Booking', BookingSchema);
