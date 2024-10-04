@@ -10,9 +10,15 @@ const storeSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    Description: {
+        type: String,
+    },
     Price: {
         type: String,
         required: true,
+    },
+    photoURL: {
+        type: String,
     },
 });
 
