@@ -175,6 +175,7 @@ const RepairEstimateUpdate = () => {
       }
     );
   };
+  //Start HTML code
   return (
     <div className={`flex ${darkMode ? "bg-gray-900 " : "bg-white "}`}>
       <Sidebar isOpen={sidebarOpen} />
