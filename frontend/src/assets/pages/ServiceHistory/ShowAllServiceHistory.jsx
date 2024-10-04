@@ -65,11 +65,8 @@ const ShowAllServiceHistory = () => {
         const query = event.target.value.toLowerCase();
         setSearchQuery(query);
         const filtered = serviceHistories.filter((history) =>
-            history.Customer_Name.toLowerCase().includes(query) ||
-            history.Customer_Email.toLowerCase().includes(query) ||
             history.Vehicle_Number.toLowerCase().includes(query) ||
-            history.Package.toLowerCase().includes(query) ||
-            history.Booking_Id.toLowerCase().includes(query)
+            history.cusID.toLowerCase().includes(query) 
         );
         setFilteredHistories(filtered);
     };
@@ -80,21 +77,19 @@ const ShowAllServiceHistory = () => {
     
         // Define table columns for service history data
         const tableColumn = [
-            'Customer Name', 'Email', 'Employee', 'Vehicle No', 'Service History', 'Service Date', 'Mileage', 'Package', 'Selected Services', 'Booking ID', 'Next Service'
+            'Customer ID','Vehicle No', 'Employee',  'Service History', 'Service Date', 'Mileage', 'Package', 'Selected Services', 'Next Service'
         ];
     
         // Map service history data to table rows
         const tableRows = filteredHistories.map(history => [
-            history.Customer_Name,
-            history.Customer_Email,
-            history.Allocated_Employee,
+            history.cusID,
             history.Vehicle_Number,
+            history.Allocated_Employee,
             history.Service_History,
             new Date(history.Service_Date).toLocaleDateString(), // Format service date
             history.Milage,
             history.Package,
             history.selectedServices.join(", "), // Join selected services as a comma-separated string
-            history.Booking_Id,
             history.nextService
         ]);
     
@@ -114,7 +109,7 @@ const ShowAllServiceHistory = () => {
     
         // Add a separator line
         doc.text(
-            "--------------------------------------------------------------------------------------------------",
+            "-----------------------------------------------------------------------------------------------------------------------------------------------------",
             0,
             50
         );
@@ -122,6 +117,7 @@ const ShowAllServiceHistory = () => {
         // Create and format the service history table
         doc.autoTable({
             startY: 55,
+         
             margin: { left: 20, right: 20 }, // Set margins
             head: [tableColumn], // Table header
             body: tableRows, // Data rows
@@ -284,22 +280,20 @@ const ShowAllServiceHistory = () => {
                 </div>
 
      
-                <div className={`p-6  overflow-y-scroll max-w-7xl ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
+                <div className={`p-6  overflow-y-scroll  ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}` } style={{width:"100%"}}>
 
-                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md" >
                 <thead className="bg-gray-800 text-white">
                 <tr>
-                                <th className="px-6 py-4 text-left">Customer Name</th>
-                                <th className="px-6 py-4 text-left">Email</th>
-                                <th className="px-6 py-4 text-left">Allocated Employee</th>
+                                <th className="px-6 py-4 text-left">Customer ID</th>
                                 <th className="px-6 py-4 text-left">Vehicle Number</th>
+                                <th className="px-6 py-4 text-left">Allocated Employee</th>
                                 <th className="px-6 py-4 text-left">Service History</th>
                                 <th className="px-6 py-4 text-left">Service Date</th>
                                 <th className="px-6 py-4 text-left">Mileage</th>
                                 <th className="px-6 py-4 text-left">Package</th>
                                 <th className="px-6 py-4 text-left">Selected Services</th>
-                                <th className="px-6 py-4 text-left">Booking ID</th>
-                                <th className="px-6 py-4 text-left">Next Service Date</th>
+                                <th className="px-6 py-4 text-left">Next Service Mileage</th>
                                 <th className="px-6 py-4 text-left">Actions</th>
                             </tr>
                         </thead>
@@ -314,16 +308,14 @@ const ShowAllServiceHistory = () => {
                                         key={history._id}
                                         className={index % 2 === 0 ? (darkMode ? 'bg-gray-700' : 'bg-gray-100') : (darkMode ? 'bg-gray-800' : 'bg-white')}
                                         >
-                                        <td className="px-6 py-4">{history.Customer_Name}</td>
-                                        <td className="px-6 py-4">{history.Customer_Email}</td>
-                                        <td className="px-6 py-4">{history.Allocated_Employee}</td>
+                                        <td className="px-6 py-4">{history.cusID}</td>
                                         <td className="px-6 py-4">{history.Vehicle_Number}</td>
+                                        <td className="px-6 py-4">{history.Allocated_Employee}</td>
                                         <td className="px-6 py-4">{history.Service_History}</td>
                                         <td className="px-6 py-4">{new Date(history.Service_Date).toLocaleDateString()}</td>
                                         <td className="px-6 py-4">{history.Milage}</td>
                                         <td className="px-6 py-4">{history.Package}</td>
                                         <td className="px-6 py-4">{history.selectedServices.join(", ")}</td>
-                                        <td className="px-6 py-4">{history.Booking_Id}</td>
                                         <td className="px-6 py-4">{history.nextService}</td>
                                         <td className="px-6 py-4">
                                             <div style={styles.actionIcons}>

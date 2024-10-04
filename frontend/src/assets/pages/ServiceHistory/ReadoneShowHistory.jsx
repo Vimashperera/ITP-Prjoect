@@ -41,26 +41,20 @@ function ReadoneShowHistory() {
                     Service History Details
                 </h1>
                 <div className="space-y-4">
+                <div className="flex items-center">
+                        <span className="font-semibold w-48 text-gray-700">Vehicle Number:</span>
+                        <span className="text-gray-600">{service.Vehicle_Number}</span>
+                    </div>
                     <div className="flex items-center">
                         <span className="font-semibold w-48 text-gray-700">Customer ID:</span>
                         <span className="text-gray-600">{service.cusID}</span>
                     </div>
-                    <div className="flex items-center">
-                        <span className="font-semibold w-48 text-gray-700">Customer Name:</span>
-                        <span className="text-gray-600">{service.Customer_Name}</span>
-                    </div>
-                    <div className="flex items-center">
-                        <span className="font-semibold w-48 text-gray-700">Customer Email:</span>
-                        <span className="text-gray-600">{service.Customer_Email}</span>
-                    </div>
+                 
                     <div className="flex items-center">
                         <span className="font-semibold w-48 text-gray-700">Allocated Employee:</span>
                         <span className="text-gray-600">{service.Allocated_Employee}</span>
                     </div>
-                    <div className="flex items-center">
-                        <span className="font-semibold w-48 text-gray-700">Vehicle Number:</span>
-                        <span className="text-gray-600">{service.Vehicle_Number}</span>
-                    </div>
+
                     <div className="flex items-center">
                         <span className="font-semibold w-48 text-gray-700">Service History:</span>
                         <span className="text-gray-600">{service.Service_History}</span>
@@ -80,10 +74,6 @@ function ReadoneShowHistory() {
                     <div className="flex items-center">
                         <span className="font-semibold w-48 text-gray-700">Selected Services:</span>
                         <span className="text-gray-600">{service.selectedServices.join(', ')}</span>
-                    </div>
-                    <div className="flex items-center">
-                        <span className="font-semibold w-48 text-gray-700">Booking ID:</span>
-                        <span className="text-gray-600">{service.Booking_Id}</span>
                     </div>
                     <div className="flex items-center">
                         <span className="font-semibold w-48 text-gray-700">Next Service Date:</span>
