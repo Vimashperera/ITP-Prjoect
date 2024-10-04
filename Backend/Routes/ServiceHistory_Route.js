@@ -11,10 +11,13 @@ router.post('/', async (request, response) => {
         // Create a new service history entry
         const newServiceHistory = new serviceHistory({
             cusID: request.body.cusID,
+            Customer_Name: request.body.Customer_Name,
+            Customer_Email: request.body.Customer_Email,
             Allocated_Employee: request.body.Allocated_Employee,
             Vehicle_Number: request.body.Vehicle_Number,
             Milage: request.body.Milage,
             Package: request.body.Package,
+            Booking_Id: request.body.Booking_Id,
             nextService: request.body.nextService,
             Service_History: request.body.Service_History,
             Service_Date: request.body.Service_Date,
@@ -116,10 +119,13 @@ router.get('/searchservices', async (request, response) => {
         const search = request.query.search;
         const serviceHistories = await serviceHistory.find({
             $or: [
+                { Customer_Name: { $regex: search, $options: 'i' } },
+                { Customer_Email: { $regex: search, $options: 'i' } },
                 { Allocated_Employee: { $regex: search, $options: 'i' } },
                 { Vehicle_Number: { $regex: search, $options: 'i' } },
                 { Milage: { $regex: search, $options: 'i' } },
                 { Package: { $regex: search, $options: 'i' } },
+                { Booking_Id: { $regex: search, $options: 'i' } },
                 { nextService: { $regex: search, $options: 'i' } },
                 { selectedServices: { $regex: search, $options: 'i' } },
                 { Service_History: { $regex: search, $options: 'i' } },

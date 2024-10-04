@@ -47,6 +47,7 @@ function CreateFeedback() {
                 });
         }
     }, [cusID]);
+    
 
     // Fetch employee options
     useEffect(() => {
@@ -94,29 +95,11 @@ function CreateFeedback() {
             return false;
         }
 
-        if (message.length > 100) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Message too long',
-                text: 'Message cannot exceed 100 characters.',
-            });
-            return false;
-        }
-
-        if (starRating === 0) { // Check if star rating is not selected
-            Swal.fire({
-                icon: 'error',
-                title: 'No Star Rating',
-                text: 'Please provide a star rating before submitting your feedback.',
-            });
-            return false;
-        }
-
         return true;
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault(); 
+        e.preventDefault(); // Prevent form default behavior
 
         if (!validateForm()) {
             return;
@@ -174,7 +157,7 @@ function CreateFeedback() {
                             height: "25px", width: "25px",
                         }}
                     />
-                ))}                   
+                ))}
             </div>
         );
     };
@@ -192,7 +175,7 @@ function CreateFeedback() {
             borderRadius: "30px",
             maxWidth: "240px",
             padding: "0px",
-            height: "725px",
+            height: "716px",
             borderTopRightRadius: "0px",
             borderBottomRightRadius: "0px",
           },
@@ -285,32 +268,37 @@ function CreateFeedback() {
                         onChange={(e) => setEmployee(e.target.value)}
                         style={styles.input}
                     >
-                        <option value="" disabled>Select an employee</option>
+                        <option value="">Select an employee</option>
                         {employeeOptions.map((option) => (
                             <option key={option.value} value={option.value}>
                                 {option.label}
                             </option>
                         ))}
                     </select>
-                    <label style={styles.label}>Star Rating:</label>
-                    {renderStars()}
-                    
+                    <div>
+                        <label style={styles.label}>Star Rating</label>
+                        <div>{renderStars()}</div>
+                    </div>
                     <textarea
-                        value={message}
-                        maxLength={100}
-                        onChange={(e) => setMessage(e.target.value)}
-                        style={styles.input}
+                        name="message"
                         placeholder="Message"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                         required
+                        style={{ ...styles.input, height: '100px' }}
                     />
-                    <p>Upto 100 Charcters</p>
                     <div style={styles.submitContainer}>
-                        <button type="submit" style={styles.submitButton}>
-                            Submit Feedback
+                        <button
+                            type="submit"
+                            style={styles.submitButton}
+                        >
+                            {loading ? 'Submitting...' : 'Submit'}
                         </button>
-                        <Link to={`/feedback/get/${cusID}`}
-                                 style={styles.linkButton}>
-                            View My Feedbacks
+                        <Link
+                            to={`/feedback/get/${cusID}`}
+                            style={styles.linkButton}
+                        >
+                            My Feedback
                         </Link>
                     </div>
                 </form>

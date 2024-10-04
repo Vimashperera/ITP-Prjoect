@@ -20,6 +20,7 @@ const ReadOneBooking = () => {
 
     fetchBooking();
   }, [id]);
+
   useEffect(() => {
     const words = ["Booking Details"];
     let i = 0;

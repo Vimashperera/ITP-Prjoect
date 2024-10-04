@@ -76,7 +76,7 @@ const ShowBooking = () => {
             }
         });
     }, []);
-    
+
     // Initial fetch of Booking data
     useEffect(() => {
         setLoading(true);
@@ -95,21 +95,33 @@ const ShowBooking = () => {
 
     // Search functionality
    // Search functionality
-const handleSearch = () => {
-    const filtered = bookings.filter((booking) =>
-        booking.Booking_Id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        booking.Customer_Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        booking.Email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        booking.Vehicle_Number.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        booking.Vehicle_Type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        booking.Contact_Number.includes(searchQuery.toLowerCase()) ||
-        booking.status.toLowerCase().includes(searchQuery.toLowerCase()) ||  // Added status to the search
-        booking.selectedPackage.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        booking.selectedServices.some(service => service.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+   const handleSearch = () => {
+    const filtered = bookings.filter((booking) => {
+        const bookingId = booking.Booking_Id?.toLowerCase() || "";
+        const customerName = booking.Customer_Name?.toLowerCase() || "";
+        const email = booking.Email?.toLowerCase() || "";
+        const vehicleNumber = booking.Vehicle_Number?.toLowerCase() || "";
+        const vehicleType = booking.Vehicle_Type?.toLowerCase() || "";
+        const contactNumber = booking.Contact_Number || ""; // No need for lowercase since it's a number
+        const status = booking.status?.toLowerCase() || "";
+        const selectedPackage = booking.selectedPackage?.toLowerCase() || "";
+        const selectedServices = booking.selectedServices?.join(", ").toLowerCase() || "";
+
+        return (
+            bookingId.includes(searchQuery.toLowerCase()) ||
+            customerName.includes(searchQuery.toLowerCase()) ||
+            email.includes(searchQuery.toLowerCase()) ||
+            vehicleNumber.includes(searchQuery.toLowerCase()) ||
+            vehicleType.includes(searchQuery.toLowerCase()) ||
+            contactNumber.includes(searchQuery.toLowerCase()) ||
+            status.includes(searchQuery.toLowerCase()) ||
+            selectedPackage.includes(searchQuery.toLowerCase()) ||
+            selectedServices.includes(searchQuery.toLowerCase())
+        );
+    });
+
     setFilteredBookings(filtered);
 };
-
 
     useEffect(() => {
         handleSearch();
@@ -184,6 +196,7 @@ const handleSearch = () => {
         // Save the generated PDF with the formatted date in the filename
         doc.save(`Booking-Report_${dateStr}.pdf`);
     };
+    
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this booking?")) {
             try {
@@ -350,4 +363,3 @@ const handleSearch = () => {
 };
 
 export default ShowBooking;
-

@@ -146,12 +146,12 @@ const RepairEstimate = () => {
     console.log(insurance);
   };
 
-  const handleVehicleChange = (e) => { //e=event
+  const handleVehicleChange = (e) => {
     const { name, value } = e.target;
 
     // Update vehicle state
     setVehicle((prevVehicle) => ({
-      ...prevVehicle, //automatically reload the page
+      ...prevVehicle,
       [name]: value,
     }));
 
@@ -278,7 +278,7 @@ const RepairEstimate = () => {
     fetchVehicleData(number);
   };
 
-  const fetchVehicleData = async (number) => {// get backend details
+  const fetchVehicleData = async (number) => {
     try {
       const response1 = await axios.get(
         `http://localhost:8077/Vehicle/${number}`
@@ -339,7 +339,7 @@ const RepairEstimate = () => {
     return true;
   };
 
-  const handleStoreToDB = async () => { //database input the data
+  const handleStoreToDB = async () => {
     try {
       // Calculate the total amount from the estimateList items
       const totalAmount = estimateList.reduce((sum, item) => {
@@ -347,7 +347,7 @@ const RepairEstimate = () => {
       }, 0);
 
       // Merge the objects into one object, including totalAmount
-      const requestBody = { //3forms
+      const requestBody = {
         ...vehicle,
         ...customer,
         ...insurance,
@@ -362,7 +362,7 @@ const RepairEstimate = () => {
       }
 
       // Send the POST request with the merged object
-      const res = await axios.post( //backend URL
+      const res = await axios.post(
         "http://localhost:8077/est/add",
         requestBody
       );
@@ -379,23 +379,12 @@ const RepairEstimate = () => {
       console.error("Error storing data to the database:", error);
     }
   };
-  //Start HTML
+
   return (
-    <div //image eka run wennanm mey div eka ain karanne oni
-      className={`flex ${darkMode ? "bg-gray-900 " : "bg-white "}`}//`flex bg-red-500` =>backgroud color
-      style={{ fontFamily: "Montserrat, sans-serif" }}//,backgroundColor:"red" =>background Colour
+    <div
+      className={`flex ${darkMode ? "bg-gray-900 " : "bg-white "}`}
+      style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      {/*<div
-    className="flex"
-    style={{
-      fontFamily: "Montserrat, sans-serif",
-      backgroundImage: url(${bgimage}), // Path to your image
-      backgroundSize: 'cover', // Adjust the image to cover the entire div
-      backgroundPosition: 'center', // Center the image
-      backgroundRepeat: 'no-repeat', // Prevent image from repeating
-      height: '100vh' // Optional: Set the div height (e.g., 100% of viewport height)
-    }}
-    > */}
       <style>{`
         .required::after {
           content: " *";
@@ -464,10 +453,11 @@ const RepairEstimate = () => {
                       name="Register_Number"
                       value={Register_Number}
                       onChange={handleVehicleNumberChange}
-                      className={`border rounded-md p-2 mr-10 ${errors.Register_Number
-                        ? "border-red-500"
-                        : "border-gray-300"
-                        }`}
+                      className={`border rounded-md p-2 mr-10 ${
+                        errors.Register_Number
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
                       maxLength="8"
                       required
                     />
@@ -494,8 +484,9 @@ const RepairEstimate = () => {
                       name="Model"
                       value={vehicle.Model}
                       onChange={handleVehicleChange}
-                      className={`border rounded-md p-2 mr-10 ${errors.Model ? "border-red-500" : "border-gray-300"
-                        }`}
+                      className={`border rounded-md p-2 mr-10 ${
+                        errors.Model ? "border-red-500" : "border-gray-300"
+                      }`}
                       required
                     />
                   </div>
@@ -544,8 +535,9 @@ const RepairEstimate = () => {
                       step={1}
                       value={vehicle.Year}
                       onChange={handleVehicleChange}
-                      className={`border rounded-md p-2 mr-10 ${errors.Year ? "border-red-500" : "border-gray-300"
-                        }`}
+                      className={`border rounded-md p-2 mr-10 ${
+                        errors.Year ? "border-red-500" : "border-gray-300"
+                      }`}
                       required
                     />
                   </div>
@@ -637,8 +629,9 @@ const RepairEstimate = () => {
                       value={customer.email}
                       onChange={handleCustomerChange}
                       required
-                      className={`border rounded-md p-2 mr-10 ${errors.email ? "border-red-500" : "border-gray-300"
-                        }`}
+                      className={`border rounded-md p-2 mr-10 ${
+                        errors.email ? "border-red-500" : "border-gray-300"
+                      }`}
                     />
                   </div>
                   <div className="flex flex-col mb-2 w-1/3">
@@ -651,8 +644,9 @@ const RepairEstimate = () => {
                       name="NIC"
                       value={customer.NIC}
                       onChange={handleCustomerChange}
-                      className={`border rounded-md p-2 mr-10 ${errors.NIC ? "border-red-500" : "border-gray-300"
-                        }`}
+                      className={`border rounded-md p-2 mr-10 ${
+                        errors.NIC ? "border-red-500" : "border-gray-300"
+                      }`}
                       required
                       maxLength={12}
                     />
@@ -669,8 +663,9 @@ const RepairEstimate = () => {
                       name="phone"
                       value={customer.phone}
                       onChange={handleCustomerChange}
-                      className={`border rounded-md p-2 mr-10 ${errors.phone ? "border-red-500" : "border-gray-300"
-                        }`}
+                      className={`border rounded-md p-2 mr-10 ${
+                        errors.phone ? "border-red-500" : "border-gray-300"
+                      }`}
                       required
                     />
                   </div>
@@ -768,7 +763,7 @@ const RepairEstimate = () => {
                     <label className="block text-gray-700 required">
                       Contact Number:
                     </label>
-                    <input //contact number validation
+                    <input
                       type="text"
                       name="agentContact"
                       value={insurance.agentContact}
@@ -783,26 +778,6 @@ const RepairEstimate = () => {
                           or 0111111111).
                         </p>
                       )}
-                      {/*<input
-                      type="text"
-                      name="agentContact"
-                      value={insurance.agentContact}
-                      onChange={handleAgentChange}
-                      className="border border-gray-300 rounded-md p-2 bg-gray-100"
-                      onKeyDown={(e) => {
-                        // Allow Backspace, Tab, Arrow keys, and prevent more than 10 digits
-                        if (
-                          e.key !== "Backspace" &&
-                          e.key !== "Tab" &&
-                          e.key !== "ArrowLeft" &&
-                          e.key !== "ArrowRight" &&
-                          (insurance.agentContact.length >= 10 || !/^[0-9]$/.test(e.key))
-                        ) {
-                          e.preventDefault();
-                        }
-                      }}
-                      required
-                    />*/}
                   </div>
                 </div>
 
