@@ -31,7 +31,8 @@ router.post('/', async (req, res) => {
             Contact_Number: req.body.Contact_Number,
             Email: req.body.Email,
             selectedPackage: req.body.selectedPackage,
-            selectedServices: req.body.selectedServices
+            selectedServices: req.body.selectedServices,
+            status: req.body.status || 'Pending'
         };
 
         const booking = await Booking.create(newBooking);
@@ -120,4 +121,27 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-export default router;
+router.put('/:id/status', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!status) {
+            return res.status(400).send({ message: 'Please provide a valid status' });
+        }
+
+        const updatedBooking = await Booking.findByIdAndUpdate(id, { status }, { new: true });
+
+        if (!updatedBooking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+
+        res.status(200).send({ message: 'Booking status updated successfully', updatedBooking });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+
+export default router;
