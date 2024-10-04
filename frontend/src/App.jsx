@@ -18,6 +18,7 @@ import ReadoneShowHistory from "./assets/pages/ServiceHistory/ReadoneShowHistory
 import ShowAllServiceHistory from "./assets/pages/ServiceHistory/ShowAllServiceHistory";
 
 const App = () => {
+
   return (
     <Routes>
       <Route path="/ServiceHistory/create" element={<CreateServiceHistory />} />
@@ -35,14 +36,15 @@ const App = () => {
       <Route path="/vehicles/:id" element={<ReadOneVehicle />} />
       <Route path="/vehicles/delete/:id" element={<DeleteVehicle />} />
       <Route path="/vehicles/create" element={<CreateVehicle />} />
-      <Route path="/vehicles" element={<ShowAllvehicle />} />
-      <Route path="/vehicles/edit/:id" element={<EditVehicle />} />
-      <Route path="/vehicles/:id" element={<ReadOneVehicle />} />
-      <Route path="/vehicles/delete/:id" element={<DeleteVehicle />} />
 
 
     </Routes>
   );
 };
+  return(
+    <div> ITP Project   </div>
+  )
+}
+
 
 export default App
