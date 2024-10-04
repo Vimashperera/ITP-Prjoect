@@ -37,6 +37,21 @@ function CLogin() {
       return; 
     }
 
+    if (cusID === 'manager' && password === 'manager123') {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Welcome back!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+
+      localStorage.setItem('cusID', cusID);
+
+      navigate('/inquire');
+      return; 
+    }
+
     // New condition for Applicant
     if (cusID === 'Applicant' && password === 'Applicant1234') {
       Swal.fire({
