@@ -76,14 +76,20 @@ const CreateBooking = () => {
   };
 
   const validateForm = () => {
-    const { Booking_Date, Customer_Name, Contact_Number, Vehicle_Number } =
-      booking;
-
+    const {
+      Booking_Date,
+      Customer_Name,
+      Contact_Number,
+      Vehicle_Number,
+      Email,
+    } = booking;
+  
     const today = new Date().toISOString().split("T")[0];
     const vehicleNumberPattern = /^[A-Z]{2,3}-\d{4}$/;
     const customerNamePattern = /^[A-Za-z\s]+$/;
     const contactNumberPattern = /^0\d{9}$/;
-
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
     if (Booking_Date < today) {
       Swal.fire(
         "Error",
@@ -92,7 +98,7 @@ const CreateBooking = () => {
       );
       return false;
     }
-
+  
     if (!customerNamePattern.test(Customer_Name)) {
       Swal.fire(
         "Error",
@@ -101,7 +107,7 @@ const CreateBooking = () => {
       );
       return false;
     }
-
+  
     if (!contactNumberPattern.test(Contact_Number)) {
       Swal.fire(
         "Error",
@@ -110,7 +116,7 @@ const CreateBooking = () => {
       );
       return false;
     }
-
+  
     if (!vehicleNumberPattern.test(Vehicle_Number)) {
       Swal.fire(
         "Error",
@@ -119,9 +125,19 @@ const CreateBooking = () => {
       );
       return false;
     }
-
+  
+    if (!emailPattern.test(Email)) {
+      Swal.fire(
+        "Error",
+        "Please enter a valid email address.",
+        "error"
+      );
+      return false;
+    }
+  
     return true;
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
