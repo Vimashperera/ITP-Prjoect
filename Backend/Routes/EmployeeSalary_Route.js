@@ -80,7 +80,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Delete an employee salary records
+// Delete an employee salary record
 router.delete('/:id', async (req, res) => {
     try {
         const employeeSalary = await EmployeeSalary.findByIdAndDelete(req.params.id);
