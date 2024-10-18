@@ -34,31 +34,31 @@ const ReadOneVacancy = () => {
 
   // If the vacancy data hasn't loaded yet, show a loading message
   if (!vacancy) {
-    return <div className="text-gray-500 text-center">No vacancy found.</div>;
+    return <div className="text-center text-gray-500">No vacancy found.</div>;
   }
 
   return (
     <div className=''><Navbar/>
     <div 
-      className="p-4 bg-cover bg-center min-h-screen flex flex-col items-center" 
+      className="flex flex-col items-center min-h-screen p-4 bg-center bg-cover" 
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <BackButton destination={`/vacancy/`} />
       <div className="w-full max-w-xl bg-white rounded-lg shadow-lg p-6 mt-[10%]">
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
+        <h1 className="mb-6 text-3xl font-semibold text-center text-gray-800">
           Vacancy Details
         </h1>
         <div className="space-y-4">
           <div className="flex items-center">
-            <span className="font-semibold w-48 text-gray-700">Job ID:</span>
+            <span className="w-48 font-semibold text-gray-700">Job ID:</span>
             <span className="text-gray-600">{vacancy._id}</span>
           </div>
           <div className="flex items-center">
-            <span className="font-semibold w-48 text-gray-700">Name:</span>
+            <span className="w-48 font-semibold text-gray-700">Name:</span>
             <span className="text-gray-600">{vacancy.Name}</span>
           </div>
           <div className="flex items-center">
-            <span className="font-semibold w-48 text-gray-700">Job Description:</span>
+            <span className="w-48 font-semibold text-gray-700">Job Description:</span>
             <span className="text-gray-600">{vacancy.Description}</span>
           </div>
         </div>
